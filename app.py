@@ -46,6 +46,10 @@ def load_user(user_id):
 def index():
     return render_template('index.html')
 
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = SignupForm()
