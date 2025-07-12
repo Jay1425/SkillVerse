@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Skill Swap - Sign Up</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -26,42 +26,56 @@
   <div class="bg-white shadow-xl rounded-2xl p-8 max-w-md w-full border border-accent">
     <h2 class="text-3xl font-bold text-center text-primary mb-6">Sign Up</h2>
 
-    <!-- Form -->
-    <form id="signupForm" class="space-y-4">
-      <!-- Name -->
+    <!-- Flask-WTF Form -->
+    <form method="POST" class="space-y-4">
+      {{ form.hidden_tag() }}
+
+      <!-- Username (Full Name) -->
       <div class="relative">
-        <input type="text" id="fullname" name="fullname" required
+        <input type="text" name="username" value="{{ form.username.data }}" required
                class="peer w-full border-b-2 border-accent focus:border-primary outline-none bg-transparent pt-6 pb-2">
-        <label for="fullname" class="absolute left-0 top-2 text-gray-500 text-sm peer-focus:top-0 peer-focus:text-xs transition-all">Full Name</label>
+        <label class="absolute left-0 top-2 text-gray-500 text-sm peer-focus:top-0 peer-focus:text-xs transition-all">
+          Full Name
+        </label>
       </div>
 
       <!-- Email -->
       <div class="relative">
-        <input type="email" id="email" name="email" required
+        <input type="email" name="email" value="{{ form.email.data }}" required
                class="peer w-full border-b-2 border-accent focus:border-primary outline-none bg-transparent pt-6 pb-2">
-        <label for="email" class="absolute left-0 top-2 text-gray-500 text-sm peer-focus:top-0 peer-focus:text-xs transition-all">Email Address</label>
+        <label class="absolute left-0 top-2 text-gray-500 text-sm peer-focus:top-0 peer-focus:text-xs transition-all">
+          Email Address
+        </label>
       </div>
 
       <!-- Password -->
       <div class="relative">
-        <input type="password" id="password" name="password" required
+        <input type="password" name="password" id="password" required
                class="peer w-full border-b-2 border-accent focus:border-primary outline-none bg-transparent pt-6 pb-2">
-        <label for="password" class="absolute left-0 top-2 text-gray-500 text-sm peer-focus:top-0 peer-focus:text-xs transition-all">Password</label>
+        <label class="absolute left-0 top-2 text-gray-500 text-sm peer-focus:top-0 peer-focus:text-xs transition-all">
+          Password
+        </label>
       </div>
 
-      <!-- Confirm Password -->
+      <!-- Confirm Password (Client-side only) -->
       <div class="relative">
         <input type="password" id="confirmPassword" required
                class="peer w-full border-b-2 border-accent focus:border-primary outline-none bg-transparent pt-6 pb-2">
-        <label for="confirmPassword" class="absolute left-0 top-2 text-gray-500 text-sm peer-focus:top-0 peer-focus:text-xs transition-all">Confirm Password</label>
+        <label class="absolute left-0 top-2 text-gray-500 text-sm peer-focus:top-0 peer-focus:text-xs transition-all">
+          Confirm Password
+        </label>
         <p id="matchMessage" class="text-xs mt-1 text-coral hidden">Passwords do not match</p>
       </div>
 
-      <!-- Submit Button -->
-      <button type="submit" class="w-full bg-primary text-white font-semibold py-2 rounded-md hover:bg-skyblue transition">Create Account</button>
+      <!-- Submit -->
+      <button type="submit" class="w-full bg-primary text-white font-semibold py-2 rounded-md hover:bg-skyblue transition">
+        Create Account
+      </button>
     </form>
 
-    <p class="text-sm text-center text-gray-500 mt-4">Already a member? <a href="#" class="text-primary hover:underline">Log in</a></p>
+    <p class="text-sm text-center text-gray-500 mt-4">
+      Already a member? <a href="{{ url_for('auth.login') }}" class="text-primary hover:underline">Log in</a>
+    </p>
   </div>
 
   <script>
