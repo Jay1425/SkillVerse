@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Swap - Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#065758',
+            bg: '#E2F0EF',
+            accent: '#A9D4D6',
+            skyblue: '#82C3C5',
+            coral: '#C46960'
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body class="bg-bg min-h-screen flex items-center justify-center">
+  <div class="bg-white shadow-xl rounded-2xl p-8 max-w-md w-full border border-accent">
+    <h2 class="text-3xl font-bold text-center text-primary mb-6">Login</h2>
+
+    <!-- Form -->
+    <form action="/login" method="POST" class="space-y-4">
+      <!-- Email -->
+      <div class="relative">
+        <input type="email" id="email" name="email" required
+               class="peer w-full border-b-2 border-accent focus:border-primary outline-none bg-transparent pt-6 pb-2">
+        <label for="email" class="absolute left-0 top-2 text-gray-500 text-sm peer-focus:top-0 peer-focus:text-xs transition-all">Email Address</label>
+      </div>
+
+      <!-- Password -->
+      <div class="relative">
+        <input type="password" id="password" name="password" required
+               class="peer w-full border-b-2 border-accent focus:border-primary outline-none bg-transparent pt-6 pb-2">
+        <label for="password" class="absolute left-0 top-2 text-gray-500 text-sm peer-focus:top-0 peer-focus:text-xs transition-all">Password</label>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="w-full bg-primary text-white font-semibold py-2 rounded-md hover:bg-skyblue transition">Login</button>
+    </form>
+
+    <div class="my-4 flex items-center justify-center">
+      <div class="border-t border-gray-300 w-1/4"></div>
+      <span class="mx-2 text-gray-500 text-sm">or</span>
+      <div class="border-t border-gray-300 w-1/4"></div>
+    </div>
+
+    <!-- Google Sign In -->
+    <div id="g_id_onload"
+         data-client_id="YOUR_GOOGLE_CLIENT_ID"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-login_uri="/google-login"
+         data-auto_prompt="false">
+    </div>
+
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="pill"
+         data-theme="outline"
+         data-text="sign_in_with"
+         data-size="large"
+         data-logo_alignment="left">
+    </div>
+
+    <p class="text-sm text-center text-gray-500 mt-4">New here? <a href="/" class="text-primary hover:underline">Create an account</a></p>
+  </div>
+</body>
+</html>

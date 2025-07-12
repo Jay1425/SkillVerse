@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Swap - Sign Up</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#065758',
+            bg: '#E2F0EF',
+            accent: '#A9D4D6',
+            skyblue: '#82C3C5',
+            coral: '#C46960'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-bg min-h-screen flex items-center justify-center">
+
+  <div class="bg-white shadow-xl rounded-2xl p-8 max-w-md w-full border border-accent">
+    <h2 class="text-3xl font-bold text-center text-primary mb-6">Sign Up</h2>
+
+    <!-- Form -->
+    <form id="signupForm" class="space-y-4">
+      <!-- Name -->
+      <div class="relative">
+        <input type="text" id="fullname" name="fullname" required
+               class="peer w-full border-b-2 border-accent focus:border-primary outline-none bg-transparent pt-6 pb-2">
+        <label for="fullname" class="absolute left-0 top-2 text-gray-500 text-sm peer-focus:top-0 peer-focus:text-xs transition-all">Full Name</label>
+      </div>
+
+      <!-- Email -->
+      <div class="relative">
+        <input type="email" id="email" name="email" required
+               class="peer w-full border-b-2 border-accent focus:border-primary outline-none bg-transparent pt-6 pb-2">
+        <label for="email" class="absolute left-0 top-2 text-gray-500 text-sm peer-focus:top-0 peer-focus:text-xs transition-all">Email Address</label>
+      </div>
+
+      <!-- Password -->
+      <div class="relative">
+        <input type="password" id="password" name="password" required
+               class="peer w-full border-b-2 border-accent focus:border-primary outline-none bg-transparent pt-6 pb-2">
+        <label for="password" class="absolute left-0 top-2 text-gray-500 text-sm peer-focus:top-0 peer-focus:text-xs transition-all">Password</label>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="relative">
+        <input type="password" id="confirmPassword" required
+               class="peer w-full border-b-2 border-accent focus:border-primary outline-none bg-transparent pt-6 pb-2">
+        <label for="confirmPassword" class="absolute left-0 top-2 text-gray-500 text-sm peer-focus:top-0 peer-focus:text-xs transition-all">Confirm Password</label>
+        <p id="matchMessage" class="text-xs mt-1 text-coral hidden">Passwords do not match</p>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="w-full bg-primary text-white font-semibold py-2 rounded-md hover:bg-skyblue transition">Create Account</button>
+    </form>
+
+    <p class="text-sm text-center text-gray-500 mt-4">Already a member? <a href="#" class="text-primary hover:underline">Log in</a></p>
+  </div>
+
+  <script>
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("confirmPassword");
+    const matchMessage = document.getElementById("matchMessage");
+
+    confirmPassword.addEventListener("input", () => {
+      matchMessage.classList.toggle("hidden", password.value === confirmPassword.value);
+    });
+  </script>
+</body>
+</html>
