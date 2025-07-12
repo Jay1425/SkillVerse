@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile - Polar Pop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #E2F0EF;
+        }
+
+        .fade-out {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.3s ease;
+        }
+
+        /* Pulsating animation for buttons */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Hover effect for profile image */
+        @keyframes hoverScale {
+            from { transform: scale(1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+            to { transform: scale(1.05); box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); }
+        }
+
+        .profile-hover:hover img {
+            animation: hoverScale 0.3s ease-out forwards;
+        }
+
+        .pulse-animation {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .button-container {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .group:hover .button-container {
+            opacity: 100;
+        }
+
+        #uploadPic {
+            display: none;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen font-sans">
+    <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-lg animate-fade-in">
+        <div class="flex flex-col items-center space-y-6">
+
+            <!-- Profile Picture with Buttons Above -->
+            <div class="relative w-28 h-auto group">
+
+                <!-- Profile Image -->
+                <div class="relative profile-hover">
+                    <img id="profileImage" src="https://via.placeholder.com/100" alt="Profile"
+                        class="w-28 h-28 rounded-full border-4 border-[#065758] shadow-lg object-cover">
+                </div>
+<!-- Buttons (icons + text) appear on hover -->
+                <div class="absolute -top-14 left-1/2 -translate-x-1/2 flex space-x-3 button-container opacity-0 group-hover:opacity-100 transition">
+                    <!-- Change Photo -->
+                    <label for="uploadPic" title="Change Photo"
+                        class="flex items-center gap-1 bg-[#065758] text-white px-3 py-1 text-xs rounded-full cursor-pointer hover:bg-[#054d4a] shadow pulse-animation">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Change
+                    </label>
+
+                    <!-- Remove Photo -->
+                    <button onclick="removeProfilePic()" title="Remove Photo"
+                        class="flex items-center gap-1 bg-[#C46960] text-white px-3 py-1 text-xs rounded-full hover:bg-red-600 shadow pulse-animation">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                        Remove
+                    </button>
+                </div>
+                <!-- Hidden File Input -->
+                <input type="file" accept="image/*" id="uploadPic" class="hidden">
+            </div>
+
+            <!-- Name -->
+            <h1 class="text-2xl font-bold text-[#065758]">Vishakha Chudasama</h1>
+
+            <!-- Location (Editable) -->
+            <div class="text-[#82C3C5]">
+                <input id="locationInput"
+                    class="bg-transparent text-center border border-transparent focus:border-[#82C3C5] focus:outline-none rounded px-2"
+                    value="Ahmedabad, India">
+            </div>
+
+            <!-- Public/Private Toggle -->
+            <div class="flex items-center space-x-3">
+                <label class="text-sm font-medium text-gray-700">Public Profile</label>
+                <label class="inline-flex items-center cursor-pointer">
+                    <input type="checkbox" value="" class="sr-only peer" checked id="togglePublic">
+                    <div
+                        class="w-11 h-6 bg-[#A9D4D6] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#065758] relative">
+                    </div>
+                </label>
+            </div>
+
+            <!-- Skills Offered -->
+            <div class="w-full">
+                <h2 class="text-lg font-semibold text-[#065758] mb-2">Skills Offered</h2>
+                <div id="skillsContainer" class="flex flex-wrap gap-2">
+                    <div
+                        class="skill-item flex items-center bg-[#A9D4D6] text-white px-3 py-1 rounded-full transition hover:bg-[#82C3C5]">
+                        HTML <span class="ml-2 cursor-pointer font-bold hover:text-red-300">×</span>
+                    </div>
+                    <div
+                        class="skill-item flex items-center bg-[#A9D4D6] text-white px-3 py-1 rounded-full transition hover:bg-[#82C3C5]">
+                        Tailwind <span class="ml-2 cursor-pointer font-bold hover:text-red-300">×</span>
+                    </div>
+                    <div
+                        class="skill-item flex items-center bg-[#A9D4D6] text-white px-3 py-1 rounded-full transition hover:bg-[#82C3C5]">
+                        JavaScript <span class="ml-2 cursor-pointer font-bold hover:text-red-300">×</span>
+                    </div>
+                    <div
+                        class="skill-item flex items-center bg-[#A9D4D6] text-white px-3 py-1 rounded-full transition hover:bg-[#82C3C5]">
+                        Flask <span class="ml-2 cursor-pointer font-bold hover:text-red-300">×</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills Wanted -->
+            <div class="w-full mt-4">
+                <h2 class="text-lg font-semibold text-[#065758] mb-2">Skills Wanted</h2>
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-[#C46960] text-white px-3 py-1 rounded-full">React</span>
+                    <span class="bg-[#C46960] text-white px-3 py-1 rounded-full">Docker</span>
+                </div>
+            </div>
+
+            <!-- Availability (Editable) -->
+            <div class="mt-4 text-center">
+                <h2 class="text-lg font-semibold text-[#065758]">Availability</h2>
+                <input id="availabilityInput"
+                    class="bg-transparent text-center border border-transparent focus:border-[#82C3C5] focus:outline-none rounded px-2 text-[#82C3C5]"
+                    value="Evenings & Weekends">
+            </div>
+
+            <!-- Edit Profile -->
+            <button
+                class="mt-6 bg-[#065758] text-white px-6 py-2 rounded-full shadow hover:bg-[#054d4a] transition duration-300">Edit
+                Profile</button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const skillsContainer = document.getElementById('skillsContainer');
+        const profileImage = document.getElementById('profileImage');
+
+        // Skill removal
+        skillsContainer.addEventListener('click', function (e) {
+            if (e.target.tagName === 'SPAN' && e.target.textContent === '×') {
+                const skillItem = e.target.parentElement;
+                skillItem.classList.add('fade-out');
+                setTimeout(() => skillItem.remove(), 300);
+            }
+        });
+
+        // Upload new profile photo
+        document.getElementById('uploadPic').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    profileImage.src = evt.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Remove profile photo
+        function removeProfilePic() {
+            profileImage.src = "https://via.placeholder.com/100";
+        }
+    </script>
+</body>
+</html>
