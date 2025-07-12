@@ -30,7 +30,7 @@
     <form method="POST" class="space-y-4">
       {{ form.hidden_tag() }}
 
-      <!-- Username (Full Name) -->
+      <!-- Username -->
       <div class="relative">
         <input type="text" name="username" value="{{ form.username.data }}" required
                class="peer w-full border-b-2 border-accent focus:border-primary outline-none bg-transparent pt-6 pb-2">
@@ -57,7 +57,7 @@
         </label>
       </div>
 
-      <!-- Confirm Password (Client-side only) -->
+      <!-- Confirm Password -->
       <div class="relative">
         <input type="password" id="confirmPassword" required
                class="peer w-full border-b-2 border-accent focus:border-primary outline-none bg-transparent pt-6 pb-2">
@@ -74,7 +74,7 @@
     </form>
 
     <p class="text-sm text-center text-gray-500 mt-4">
-      Already a member? <a href="{{ url_for('auth.login') }}" class="text-primary hover:underline">Log in</a>
+      Already a member? <a href="{{ url_for('login') }}" class="text-primary hover:underline">Log in</a>
     </p>
   </div>
 
