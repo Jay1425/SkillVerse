@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Add Skill - SkillVerse{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-6 py-8">
+    <!-- Header -->
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold gradient-text mb-4">Add Your Skill</h1>
+        <p class="text-lg text-[#065758]/80">
+            Share your expertise with the community and help others learn from you.
+        </p>
+    </div>
+
+    <!-- Form -->
+    <div class="glass rounded-2xl p-8">
+        <form method="POST" class="space-y-6">
+            {{ form.hidden_tag() }}
+            
+            <div>
+                <label for="{{ form.name.id }}" class="block text-sm font-semibold text-[#065758] mb-2">
+                    {{ form.name.label }}
+                </label>
+                {{ form.name(class="w-full px-4 py-3 rounded-lg border border-[#A9D4D6]/30 bg-white/50 text-[#065758] focus:outline-none focus:ring-2 focus:ring-[#82C3C5] focus:border-transparent") }}
+                {% if form.name.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {% for error in form.name.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="{{ form.description.id }}" class="block text-sm font-semibold text-[#065758] mb-2">
+                    {{ form.description.label }}
+                </label>
+                {{ form.description(class="w-full px-4 py-3 rounded-lg border border-[#A9D4D6]/30 bg-white/50 text-[#065758] focus:outline-none focus:ring-2 focus:ring-[#82C3C5] focus:border-transparent", rows="4", placeholder="Describe what you can teach, your experience level, and what learners can expect...") }}
+                {% if form.description.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {% for error in form.description.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="{{ form.category.id }}" class="block text-sm font-semibold text-[#065758] mb-2">
+                        {{ form.category.label }}
+                    </label>
+                    {{ form.category(class="w-full px-4 py-3 rounded-lg border border-[#A9D4D6]/30 bg-white/50 text-[#065758] focus:outline-none focus:ring-2 focus:ring-[#82C3C5] focus:border-transparent") }}
+                    {% if form.category.errors %}
+                        <div class="mt-1 text-red-600 text-sm">
+                            {% for error in form.category.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.level.id }}" class="block text-sm font-semibold text-[#065758] mb-2">
+                        {{ form.level.label }}
+                    </label>
+                    {{ form.level(class="w-full px-4 py-3 rounded-lg border border-[#A9D4D6]/30 bg-white/50 text-[#065758] focus:outline-none focus:ring-2 focus:ring-[#82C3C5] focus:border-transparent") }}
+                    {% if form.level.errors %}
+                        <div class="mt-1 text-red-600 text-sm">
+                            {% for error in form.level.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="pt-4">
+                {{ form.submit(class="w-full btn-primary py-3 rounded-lg text-white font-semibold hover:shadow-lg transition-all") }}
+            </div>
+        </form>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="glass rounded-2xl p-6 mt-8">
+        <h3 class="text-lg font-semibold text-[#065758] mb-4">Tips for a Great Skill Listing</h3>
+        <ul class="space-y-2 text-sm text-[#065758]/70">
+            <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-[#82C3C5] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Be specific about what you can teach and your experience level</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-[#82C3C5] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Mention any certifications, projects, or achievements</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-[#82C3C5] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Explain how you prefer to teach (online, in-person, etc.)</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-[#82C3C5] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Include what learners can expect to gain from your teaching</span>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %} 

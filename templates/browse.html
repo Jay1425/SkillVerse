@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Skills - SkillVerse{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-6 py-8">
+    <!-- Header -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold gradient-text mb-4">Browse Skills</h1>
+        <p class="text-lg text-[#065758]/80 max-w-2xl mx-auto">
+            Discover amazing skills from our community members. Find someone to learn from or offer your expertise in exchange.
+        </p>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="glass rounded-2xl p-6 mb-8">
+        <div class="flex flex-wrap gap-4 items-center justify-center">
+            <select id="category-filter" class="px-4 py-2 rounded-lg border border-[#A9D4D6]/30 bg-white/50 text-[#065758] focus:outline-none focus:ring-2 focus:ring-[#82C3C5]">
+                <option value="">All Categories</option>
+                <option value="programming">Programming</option>
+                <option value="design">Design</option>
+                <option value="marketing">Marketing</option>
+                <option value="languages">Languages</option>
+                <option value="music">Music</option>
+                <option value="cooking">Cooking</option>
+                <option value="fitness">Fitness</option>
+                <option value="other">Other</option>
+            </select>
+            
+            <select id="level-filter" class="px-4 py-2 rounded-lg border border-[#A9D4D6]/30 bg-white/50 text-[#065758] focus:outline-none focus:ring-2 focus:ring-[#82C3C5]">
+                <option value="">All Levels</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+            </select>
+            
+            <input type="text" id="search-input" placeholder="Search skills..." class="px-4 py-2 rounded-lg border border-[#A9D4D6]/30 bg-white/50 text-[#065758] focus:outline-none focus:ring-2 focus:ring-[#82C3C5] min-w-[200px]">
+        </div>
+    </div>
+
+    <!-- Skills Grid -->
+    {% if skills %}
+        <div id="skills-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for skill in skills %}
+            <div class="skill-card bg-white/50 rounded-2xl p-6 border border-[#A9D4D6]/30 hover:shadow-xl transition-all duration-300" 
+                 data-category="{{ skill.category }}" 
+                 data-level="{{ skill.level }}"
+                 data-name="{{ skill.name|lower }}"
+                 data-description="{{ skill.description|lower }}">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-[#065758] mb-2">{{ skill.name }}</h3>
+                        <p class="text-[#065758]/70 text-sm mb-4">{{ skill.description }}</p>
+                    </div>
+                </div>
+                
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="px-3 py-1 bg-[#A9D4D6]/20 text-[#065758] text-sm rounded-full font-medium">
+                        {{ skill.category|title }}
+                    </span>
+                    <span class="px-3 py-1 bg-[#82C3C5]/20 text-[#065758] text-sm rounded-full font-medium">
+                        {{ skill.level|title }}
+                    </span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">{{ skill.user.username[0]|upper }}</span>
+                        </div>
+                        <span class="text-sm text-[#065758]/70">{{ skill.user.username }}</span>
+                    </div>
+                    <span class="text-xs text-[#065758]/60">
+                        {{ skill.created_at.strftime('%b %d, %Y') }}
+                    </span>
+                </div>
+                
+                {% if current_user.is_authenticated and current_user.id != skill.user_id %}
+                <div class="mt-4 pt-4 border-t border-[#A9D4D6]/20">
+                    <a href="{{ url_for('create_request') }}?skill_wanted={{ skill.name }}" 
+                       class="btn-primary w-full text-center py-2 rounded-lg text-white font-semibold hover:shadow-lg transition-all">
+                        Request This Skill
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- No Results Message -->
+        <div id="no-results" class="hidden text-center py-12">
+            <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <h3 class="text-xl font-semibold text-[#065758] mb-2">No skills found</h3>
+            <p class="text-[#065758]/70">Try adjusting your filters or search terms.</p>
+        </div>
+    {% else %}
+        <!-- Empty State -->
+        <div class="text-center py-12">
+            <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+            <h3 class="text-xl font-semibold text-[#065758] mb-2">No skills available yet</h3>
+            <p class="text-[#065758]/70 mb-6">Be the first to add your skills to the community!</p>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('add_skill') }}" class="btn-primary px-6 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all">
+                    Add Your First Skill
+                </a>
+            {% else %}
+                <a href="{{ url_for('signup') }}" class="btn-primary px-6 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all">
+                    Join SkillVerse
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<script>
+// Filter functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryFilter = document.getElementById('category-filter');
+    const levelFilter = document.getElementById('level-filter');
+    const searchInput = document.getElementById('search-input');
+    const skillsGrid = document.getElementById('skills-grid');
+    const noResults = document.getElementById('no-results');
+    const skillCards = document.querySelectorAll('.skill-card');
+
+    function filterSkills() {
+        const category = categoryFilter.value.toLowerCase();
+        const level = levelFilter.value.toLowerCase();
+        const search = searchInput.value.toLowerCase();
+        
+        let visibleCount = 0;
+        
+        skillCards.forEach(card => {
+            const cardCategory = card.dataset.category;
+            const cardLevel = card.dataset.level;
+            const cardName = card.dataset.name;
+            const cardDescription = card.dataset.description;
+            
+            const categoryMatch = !category || cardCategory === category;
+            const levelMatch = !level || cardLevel === level;
+            const searchMatch = !search || cardName.includes(search) || cardDescription.includes(search);
+            
+            if (categoryMatch && levelMatch && searchMatch) {
+                card.style.display = 'block';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        // Show/hide no results message
+        if (visibleCount === 0) {
+            skillsGrid.style.display = 'none';
+            noResults.classList.remove('hidden');
+        } else {
+            skillsGrid.style.display = 'grid';
+            noResults.classList.add('hidden');
+        }
+    }
+
+    // Add event listeners
+    categoryFilter.addEventListener('change', filterSkills);
+    levelFilter.addEventListener('change', filterSkills);
+    searchInput.addEventListener('input', filterSkills);
+});
+</script>
+{% endblock %}

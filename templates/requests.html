@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Swap Requests - SkillVerse{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-6 py-8">
+    <!-- Header -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold gradient-text mb-4">Swap Requests</h1>
+        <p class="text-lg text-[#065758]/80 max-w-2xl mx-auto">
+            Browse open skill swap requests from our community. Find someone who wants to learn what you can teach!
+        </p>
+    </div>
+
+    <!-- Create Request Button -->
+    {% if current_user.is_authenticated %}
+    <div class="text-center mb-8">
+        <a href="{{ url_for('create_request') }}" class="btn-primary px-8 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all inline-flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Create New Request
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Requests Grid -->
+    {% if requests %}
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {% for request in requests %}
+            <div class="glass rounded-2xl p-6 border border-[#A9D4D6]/30 hover:shadow-xl transition-all duration-300">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-[#065758] mb-2">{{ request.title }}</h3>
+                        <p class="text-[#065758]/70 text-sm mb-4">{{ request.description }}</p>
+                    </div>
+                </div>
+                
+                <!-- Skills Section -->
+                <div class="bg-white/30 rounded-lg p-4 mb-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-semibold text-[#065758] mb-2 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-[#c46960]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Wants to Learn
+                            </h4>
+                            <span class="px-3 py-1 bg-[#c46960]/20 text-[#065758] text-sm rounded-full font-medium">
+                                {{ request.skill_wanted }}
+                            </span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-[#065758] mb-2 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-[#82C3C5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Can Teach
+                            </h4>
+                            <span class="px-3 py-1 bg-[#82C3C5]/20 text-[#065758] text-sm rounded-full font-medium">
+                                {{ request.skill_offered }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- User Info -->
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold">{{ request.requester.username[0]|upper }}</span>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-[#065758]">{{ request.requester.username }}</p>
+                            <p class="text-xs text-[#065758]/60">Member since {{ request.requester.created_at.strftime('%b %Y') }}</p>
+                        </div>
+                    </div>
+                    <span class="text-xs text-[#065758]/60">
+                        {{ request.created_at.strftime('%b %d, %Y') }}
+                    </span>
+                </div>
+                
+                <!-- Action Button -->
+                {% if current_user.is_authenticated and current_user.id != request.requester_id %}
+                    <form method="POST" action="{{ url_for('accept_request', request_id=request.id) }}">
+                        <button type="submit" class="btn-primary w-full py-3 rounded-lg text-white font-semibold hover:shadow-lg transition-all">
+                            Accept This Request
+                        </button>
+                    </form>
+                {% elif current_user.is_authenticated and current_user.id == request.requester_id %}
+                    <div class="text-center py-2">
+                        <span class="text-[#065758]/60 text-sm">This is your request</span>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn-primary w-full py-3 rounded-lg text-white font-semibold hover:shadow-lg transition-all text-center block">
+                        Login to Accept
+                    </a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- Empty State -->
+        <div class="text-center py-12">
+            <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+            <h3 class="text-xl font-semibold text-[#065758] mb-2">No open requests</h3>
+            <p class="text-[#065758]/70 mb-6">There are currently no open swap requests. Be the first to create one!</p>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('create_request') }}" class="btn-primary px-6 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all">
+                    Create First Request
+                </a>
+            {% else %}
+                <a href="{{ url_for('signup') }}" class="btn-primary px-6 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all">
+                    Join SkillVerse
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

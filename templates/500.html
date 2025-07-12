@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error - SkillVerse{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-6 py-16 text-center">
+    <div class="mb-8">
+        <svg class="w-32 h-32 mx-auto text-[#A9D4D6]/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+        </svg>
+    </div>
+    
+    <h1 class="text-6xl font-bold gradient-text mb-4">500</h1>
+    <h2 class="text-3xl font-semibold text-[#065758] mb-4">Server Error</h2>
+    <p class="text-lg text-[#065758]/70 mb-8 max-w-2xl mx-auto">
+        Something went wrong on our end. We're working to fix this issue. Please try again in a few moments.
+    </p>
+    
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="{{ url_for('index') }}" class="btn-primary px-8 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all">
+            Go Home
+        </a>
+        <button onclick="window.location.reload()" class="bg-gradient-to-r from-[#c46960] to-[#d17a72] px-8 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all">
+            Try Again
+        </button>
+    </div>
+</div>
+{% endblock %} 

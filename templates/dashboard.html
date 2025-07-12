@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - SkillVerse{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-6 py-8">
+    <!-- Welcome Section -->
+    <div class="glass rounded-2xl p-8 mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-4xl font-bold gradient-text mb-2">Welcome back, {{ user.username }}!</h1>
+                <p class="text-lg text-[#065758]/80">Ready to swap some skills today?</p>
+            </div>
+            <div class="flex gap-4">
+                <a href="{{ url_for('add_skill') }}" class="btn-primary px-6 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all">
+                    Add Skill
+                </a>
+                <a href="{{ url_for('create_request') }}" class="bg-gradient-to-r from-[#c46960] to-[#d17a72] px-6 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all">
+                    Create Request
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Your Skills Section -->
+        <div class="glass rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-[#065758]">Your Skills</h2>
+                <a href="{{ url_for('add_skill') }}" class="text-[#82C3C5] hover:text-[#065758] transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                </a>
+            </div>
+            
+            {% if skills %}
+                <div class="space-y-4">
+                    {% for skill in skills %}
+                    <div class="bg-white/50 rounded-lg p-4 border border-[#A9D4D6]/30">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="font-semibold text-[#065758]">{{ skill.name }}</h3>
+                                <p class="text-sm text-[#065758]/70">{{ skill.description[:100] }}{% if skill.description|length > 100 %}...{% endif %}</p>
+                                <div class="flex gap-2 mt-2">
+                                    <span class="px-2 py-1 bg-[#A9D4D6]/20 text-[#065758] text-xs rounded-full">{{ skill.category|title }}</span>
+                                    <span class="px-2 py-1 bg-[#82C3C5]/20 text-[#065758] text-xs rounded-full">{{ skill.level|title }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-8">
+                    <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                    <p class="text-[#065758]/70 mb-4">You haven't added any skills yet.</p>
+                    <a href="{{ url_for('add_skill') }}" class="btn-primary px-6 py-2 rounded-full text-white font-semibold">
+                        Add Your First Skill
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Recent Open Requests -->
+        <div class="glass rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-[#065758]">Recent Requests</h2>
+                <a href="{{ url_for('requests') }}" class="text-[#82C3C5] hover:text-[#065758] transition-colors text-sm">
+                    View All
+                </a>
+            </div>
+            
+            {% if open_requests %}
+                <div class="space-y-4">
+                    {% for request in open_requests %}
+                    <div class="bg-white/50 rounded-lg p-4 border border-[#A9D4D6]/30">
+                        <h3 class="font-semibold text-[#065758] mb-2">{{ request.title }}</h3>
+                        <p class="text-sm text-[#065758]/70 mb-3">{{ request.description[:100] }}{% if request.description|length > 100 %}...{% endif %}</p>
+                        <div class="flex gap-2 mb-3">
+                            <span class="px-2 py-1 bg-[#c46960]/20 text-[#065758] text-xs rounded-full">
+                                Wants: {{ request.skill_wanted }}
+                            </span>
+                            <span class="px-2 py-1 bg-[#82C3C5]/20 text-[#065758] text-xs rounded-full">
+                                Offers: {{ request.skill_offered }}
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-[#065758]/60">
+                                {{ request.created_at.strftime('%b %d, %Y') }}
+                            </span>
+                            <form method="POST" action="{{ url_for('accept_request', request_id=request.id) }}" class="inline">
+                                <button type="submit" class="bg-[#82C3C5] hover:bg-[#A9D4D6] text-white px-3 py-1 rounded-full text-xs font-medium transition-colors">
+                                    Accept
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-8">
+                    <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                    <p class="text-[#065758]/70">No open requests at the moment.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Your Requests Section -->
+    <div class="glass rounded-2xl p-6 mt-8">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-[#065758]">Your Requests</h2>
+            <a href="{{ url_for('create_request') }}" class="btn-primary px-6 py-2 rounded-full text-white font-semibold">
+                Create New Request
+            </a>
+        </div>
+        
+        {% if user_requests %}
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-[#A9D4D6]/30">
+                            <th class="text-left py-3 px-4 text-[#065758] font-semibold">Title</th>
+                            <th class="text-left py-3 px-4 text-[#065758] font-semibold">Skills</th>
+                            <th class="text-left py-3 px-4 text-[#065758] font-semibold">Status</th>
+                            <th class="text-left py-3 px-4 text-[#065758] font-semibold">Created</th>
+                            <th class="text-left py-3 px-4 text-[#065758] font-semibold">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for request in user_requests %}
+                        <tr class="border-b border-[#A9D4D6]/20">
+                            <td class="py-3 px-4">
+                                <div>
+                                    <h3 class="font-semibold text-[#065758]">{{ request.title }}</h3>
+                                    <p class="text-sm text-[#065758]/70">{{ request.description[:50] }}{% if request.description|length > 50 %}...{% endif %}</p>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4">
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-xs bg-[#c46960]/20 text-[#065758] px-2 py-1 rounded-full w-fit">
+                                        Wants: {{ request.skill_wanted }}
+                                    </span>
+                                    <span class="text-xs bg-[#82C3C5]/20 text-[#065758] px-2 py-1 rounded-full w-fit">
+                                        Offers: {{ request.skill_offered }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4">
+                                <span class="px-2 py-1 rounded-full text-xs font-medium
+                                    {% if request.status == 'open' %}bg-green-100 text-green-800
+                                    {% elif request.status == 'accepted' %}bg-blue-100 text-blue-800
+                                    {% elif request.status == 'completed' %}bg-gray-100 text-gray-800
+                                    {% else %}bg-red-100 text-red-800{% endif %}">
+                                    {{ request.status|title }}
+                                </span>
+                            </td>
+                            <td class="py-3 px-4 text-sm text-[#065758]/70">
+                                {{ request.created_at.strftime('%b %d, %Y') }}
+                            </td>
+                            <td class="py-3 px-4">
+                                {% if request.status == 'accepted' %}
+                                    <form method="POST" action="{{ url_for('complete_swap', request_id=request.id) }}" class="inline">
+                                        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium transition-colors">
+                                            Complete
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-8">
+                <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                <p class="text-[#065758]/70 mb-4">You haven't created any requests yet.</p>
+                <a href="{{ url_for('create_request') }}" class="btn-primary px-6 py-2 rounded-full text-white font-semibold">
+                    Create Your First Request
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

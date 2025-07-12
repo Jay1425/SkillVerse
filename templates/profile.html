@@ -1,191 +1,328 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>User Profile - Polar Pop</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            background-color: #E2F0EF;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Profile - SkillVerse</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { font-family: 'Inter', 'Segoe UI', sans-serif; }
+    
+    /* General Styles & Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-60px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(60px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    .animate-fade-in-up { animation: fadeInUp 1s ease-out; }
+    .animate-slide-in-left { animation: slideInLeft 1s ease-out; }
+    .animate-slide-in-right { animation: slideInRight 1s ease-out; }
+    
+    /* Glassmorphism Effect */
+    .glass {
+      backdrop-filter: blur(20px);
+      background: rgba(226, 240, 239, 0.25);
+      border: 1px solid rgba(169, 212, 214, 0.3);
+    }
+    
+    /* Gradient Text */
+    .gradient-text {
+      background: linear-gradient(135deg, #A9D4D6, #82C3C5, #c46960);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    /* Buttons */
+    .btn-primary {
+      background: linear-gradient(135deg, #A9D4D6, #82C3C5);
+      box-shadow: 0 8px 25px rgba(169, 212, 214, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #82C3C5, #A9D4D6);
+      box-shadow: 0 12px 35px rgba(130, 195, 197, 0.5);
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #c46960, #d17a72);
+      box-shadow: 0 8px 25px rgba(196, 105, 96, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #d17a72, #c46960);
+      box-shadow: 0 12px 35px rgba(209, 122, 114, 0.5);
+      transform: translateY(-2px);
+    }
 
-        .fade-out {
-            opacity: 0;
-            transform: scale(0.95);
-            transition: all 0.3s ease;
-        }
+    /* Card Enhancements */
+    .profile-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 255, 0.9));
+        border: 1px solid rgba(169, 212, 214, 0.3);
+        backdrop-filter: blur(30px);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+    .profile-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 50px rgba(169, 212, 214, 0.3);
+        border-color: rgba(169, 212, 214, 0.5);
+    }
 
-        /* Pulsating animation for buttons */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        /* Hover effect for profile image */
-        @keyframes hoverScale {
-            from { transform: scale(1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-            to { transform: scale(1.05); box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); }
-        }
-
-        .profile-hover:hover img {
-            animation: hoverScale 0.3s ease-out forwards;
-        }
-
-        .pulse-animation {
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-
-        .button-container {
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .group:hover .button-container {
-            opacity: 100;
-        }
-
-        #uploadPic {
-            display: none;
-        }
-    </style>
+    .skill-list-item {
+        background: rgba(255, 255, 255, 0.6);
+        border-left: 4px solid #A9D4D6;
+        transition: all 0.3s ease;
+    }
+    .skill-list-item:hover {
+        background: rgba(255, 255, 255, 0.8);
+        border-left-color: #82C3C5;
+        transform: translateX(5px);
+    }
+  </style>
 </head>
-<body class="flex items-center justify-center min-h-screen font-sans">
-    <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-lg animate-fade-in">
-        <div class="flex flex-col items-center space-y-6">
-
-            <!-- Profile Picture with Buttons Above -->
-            <div class="relative w-28 h-auto group">
-
-                <!-- Profile Image -->
-                <div class="relative profile-hover">
-                    <img id="profileImage" src="https://via.placeholder.com/100" alt="Profile"
-                        class="w-28 h-28 rounded-full border-4 border-[#065758] shadow-lg object-cover">
-                </div>
-<!-- Buttons (icons + text) appear on hover -->
-                <div class="absolute -top-14 left-1/2 -translate-x-1/2 flex space-x-3 button-container opacity-0 group-hover:opacity-100 transition">
-                    <!-- Change Photo -->
-                    <label for="uploadPic" title="Change Photo"
-                        class="flex items-center gap-1 bg-[#065758] text-white px-3 py-1 text-xs rounded-full cursor-pointer hover:bg-[#054d4a] shadow pulse-animation">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        Change
-                    </label>
-
-                    <!-- Remove Photo -->
-                    <button onclick="removeProfilePic()" title="Remove Photo"
-                        class="flex items-center gap-1 bg-[#C46960] text-white px-3 py-1 text-xs rounded-full hover:bg-red-600 shadow pulse-animation">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                        Remove
-                    </button>
-                </div>
-                <!-- Hidden File Input -->
-                <input type="file" accept="image/*" id="uploadPic" class="hidden">
-            </div>
-
-            <!-- Name -->
-            <h1 class="text-2xl font-bold text-[#065758]">Vishakha Chudasama</h1>
-
-            <!-- Location (Editable) -->
-            <div class="text-[#82C3C5]">
-                <input id="locationInput"
-                    class="bg-transparent text-center border border-transparent focus:border-[#82C3C5] focus:outline-none rounded px-2"
-                    value="Ahmedabad, India">
-            </div>
-
-            <!-- Public/Private Toggle -->
-            <div class="flex items-center space-x-3">
-                <label class="text-sm font-medium text-gray-700">Public Profile</label>
-                <label class="inline-flex items-center cursor-pointer">
-                    <input type="checkbox" value="" class="sr-only peer" checked id="togglePublic">
-                    <div
-                        class="w-11 h-6 bg-[#A9D4D6] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#065758] relative">
-                    </div>
-                </label>
-            </div>
-
-            <!-- Skills Offered -->
-            <div class="w-full">
-                <h2 class="text-lg font-semibold text-[#065758] mb-2">Skills Offered</h2>
-                <div id="skillsContainer" class="flex flex-wrap gap-2">
-                    <div
-                        class="skill-item flex items-center bg-[#A9D4D6] text-white px-3 py-1 rounded-full transition hover:bg-[#82C3C5]">
-                        HTML <span class="ml-2 cursor-pointer font-bold hover:text-red-300">×</span>
-                    </div>
-                    <div
-                        class="skill-item flex items-center bg-[#A9D4D6] text-white px-3 py-1 rounded-full transition hover:bg-[#82C3C5]">
-                        Tailwind <span class="ml-2 cursor-pointer font-bold hover:text-red-300">×</span>
-                    </div>
-                    <div
-                        class="skill-item flex items-center bg-[#A9D4D6] text-white px-3 py-1 rounded-full transition hover:bg-[#82C3C5]">
-                        JavaScript <span class="ml-2 cursor-pointer font-bold hover:text-red-300">×</span>
-                    </div>
-                    <div
-                        class="skill-item flex items-center bg-[#A9D4D6] text-white px-3 py-1 rounded-full transition hover:bg-[#82C3C5]">
-                        Flask <span class="ml-2 cursor-pointer font-bold hover:text-red-300">×</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Skills Wanted -->
-            <div class="w-full mt-4">
-                <h2 class="text-lg font-semibold text-[#065758] mb-2">Skills Wanted</h2>
-                <div class="flex flex-wrap gap-2">
-                    <span class="bg-[#C46960] text-white px-3 py-1 rounded-full">React</span>
-                    <span class="bg-[#C46960] text-white px-3 py-1 rounded-full">Docker</span>
-                </div>
-            </div>
-
-            <!-- Availability (Editable) -->
-            <div class="mt-4 text-center">
-                <h2 class="text-lg font-semibold text-[#065758]">Availability</h2>
-                <input id="availabilityInput"
-                    class="bg-transparent text-center border border-transparent focus:border-[#82C3C5] focus:outline-none rounded px-2 text-[#82C3C5]"
-                    value="Evenings & Weekends">
-            </div>
-
-            <!-- Edit Profile -->
-            <button
-                class="mt-6 bg-[#065758] text-white px-6 py-2 rounded-full shadow hover:bg-[#054d4a] transition duration-300">Edit
-                Profile</button>
+<body class="bg-gradient-to-br from-[#E2F0EF] via-[#A9D4D6]/50 to-[#82C3C5]/40 text-[#065758] overflow-x-hidden">
+  <!-- Header -->
+  <header class="w-full glass sticky top-0 z-50 border-b border-[#A9D4D6]/30 shadow-xl">
+    <div class="max-w-7xl mx-auto flex items-center justify-between py-6 px-6">
+      <div class="flex items-center gap-3 animate-slide-in-left">
+        <div class="relative">
+          <svg width="44" height="44" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="16" fill="url(#gradient1)"/>
+            <path d="M10 18c2-4 10-4 12 0" stroke="#065758" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="12.5" cy="13.5" r="1.5" fill="#065758"/>
+            <circle cx="19.5" cy="13.5" r="1.5" fill="#065758"/>
+            <defs>
+              <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#A9D4D6"/>
+                <stop offset="50%" style="stop-color:#82C3C5"/>
+                <stop offset="100%" style="stop-color:#c46960"/>
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
+        <span class="text-3xl font-black tracking-tight gradient-text">SkillVerse</span>
+      </div>
+      <nav class="hidden md:flex gap-8 items-center text-base font-semibold animate-slide-in-right">
+        <a href="{{ url_for('index') }}" class="hover:text-[#82C3C5] transition-all duration-300 relative group">
+          Home
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a href="{{ url_for('browse') }}" class="hover:text-[#82C3C5] transition-all duration-300 relative group">
+          Browse Skills
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a href="{{ url_for('requests') }}" class="hover:text-[#82C3C5] transition-all duration-300 relative group">
+          Requests
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a href="{{ url_for('dashboard') }}" class="hover:text-[#82C3C5] transition-all duration-300 relative group">
+          Dashboard
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        {% if current_user.is_authenticated %}
+          <a href="{{ url_for('logout') }}" class="ml-4 px-8 py-3 rounded-full btn-secondary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform">
+            Logout
+          </a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="hover:text-[#82C3C5] transition-all duration-300 relative group">
+            Login
+            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a href="{{ url_for('signup') }}" class="ml-4 px-8 py-3 rounded-full btn-primary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform">
+            Sign Up
+          </a>
+        {% endif %}
+      </nav>
+      <!-- Mobile menu button -->
+      <div class="md:hidden flex items-center">
+        <button id="mobile-menu-btn" class="p-2 rounded-lg hover:bg-[#A9D4D6]/30 focus:outline-none transition-all duration-300">
+          <svg class="w-7 h-7" fill="none" stroke="#065758" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
     </div>
-
-    <!-- JavaScript -->
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="md:hidden hidden px-6 pb-6">
+      <nav class="flex flex-col gap-4 text-base font-semibold">
+        <a href="{{ url_for('index') }}" class="hover:text-[#82C3C5] transition-all duration-300 py-2">Home</a>
+        <a href="{{ url_for('browse') }}" class="hover:text-[#82C3C5] transition-all duration-300 py-2">Browse Skills</a>
+        <a href="{{ url_for('requests') }}" class="hover:text-[#82C3C5] transition-all duration-300 py-2">Requests</a>
+        <a href="{{ url_for('dashboard') }}" class="hover:text-[#82C3C5] transition-all duration-300 py-2">Dashboard</a>
+        {% if current_user.is_authenticated %}
+          <a href="{{ url_for('logout') }}" class="mt-2 px-6 py-3 rounded-full btn-secondary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300">Logout</a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="mt-2 px-6 py-3 rounded-full btn-secondary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300">Login</a>
+          <a href="{{ url_for('signup') }}" class="mt-2 px-6 py-3 rounded-full btn-primary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300">Sign Up</a>
+        {% endif %}
+      </nav>
+    </div>
     <script>
-        const skillsContainer = document.getElementById('skillsContainer');
-        const profileImage = document.getElementById('profileImage');
-
-        // Skill removal
-        skillsContainer.addEventListener('click', function (e) {
-            if (e.target.tagName === 'SPAN' && e.target.textContent === '×') {
-                const skillItem = e.target.parentElement;
-                skillItem.classList.add('fade-out');
-                setTimeout(() => skillItem.remove(), 300);
-            }
-        });
-
-        // Upload new profile photo
-        document.getElementById('uploadPic').addEventListener('change', function (e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (evt) {
-                    profileImage.src = evt.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Remove profile photo
-        function removeProfilePic() {
-            profileImage.src = "https://via.placeholder.com/100";
-        }
+      const btn = document.getElementById('mobile-menu-btn');
+      const menu = document.getElementById('mobile-menu');
+      btn.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+        btn.classList.toggle('bg-[#A9D4D6]/30');
+      });
     </script>
+  </header>
+
+  <!-- User Profile Section -->
+  <section class="relative py-16">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="profile-card rounded-3xl p-8 mb-8 text-center animate-fade-in-up">
+        <div class="relative w-32 h-32 mx-auto mb-6">
+          <img src="https://www.gravatar.com/avatar/{{ user.email|hash('md5') }}?d=identicon&s=128" 
+               alt="{{ user.username }}'s profile picture" 
+               class="w-full h-full rounded-full object-cover border-4 border-[#A9D4D6] shadow-lg">
+          <span class="absolute bottom-0 right-0 w-8 h-8 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
+            {{ user.username[0]|upper }}
+          </span>
+        </div>
+        <h1 class="text-4xl font-bold gradient-text mb-2">{{ user.username }}</h1>
+        <p class="text-lg text-[#065758]/80 mb-4">{{ user.bio if user.bio else "No bio available." }}</p>
+        
+        <div class="flex items-center justify-center gap-4 text-sm text-[#065758]/60 mb-6">
+          {% if user.location %}
+            <span class="flex items-center gap-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z"/></svg>
+              {{ user.location }}
+            </span>
+          {% endif %}
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h.01M12 11h.01M15 11h.01M9 15h.01M12 15h.01M15 15h.01M3 21h18a2 2 0 002-2V7a2 2 0 00-2-2H3a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Joined: {{ user.created_at.strftime('%b %d, %Y') }}
+          </span>
+        </div>
+
+        <div class="flex flex-wrap gap-4 justify-center">
+          <a href="#" class="btn-primary px-6 py-2 rounded-full text-white font-semibold hover:shadow-lg transition-all">
+            Edit Profile
+          </a>
+          <a href="{{ url_for('my_swaps') }}" class="btn-secondary px-6 py-2 rounded-full text-white font-semibold hover:shadow-lg transition-all">
+            My Swaps
+          </a>
+        </div>
+      </div>
+
+      <!-- Skills Offering Section -->
+      <div class="profile-card rounded-3xl p-8 mb-8 animate-fade-in-up" style="animation-delay: 0.2s;">
+        <h2 class="text-2xl font-bold text-[#065758] mb-6">Skills I Can Teach</h2>
+        {% if skills %}
+          <div class="space-y-4">
+            {% for skill in skills %}
+              <div class="skill-list-item rounded-lg p-4 flex items-center justify-between shadow-sm">
+                <div>
+                  <h3 class="font-semibold text-[#065758]">{{ skill.name }}</h3>
+                  <p class="text-sm text-[#065758]/70">{{ skill.description[:70] }}{% if skill.description|length > 70 %}...{% endif %}</p>
+                  <div class="flex gap-2 mt-2">
+                    <span class="px-2 py-1 bg-[#A9D4D6]/20 text-[#065758] text-xs rounded-full">{{ skill.category|title }}</span>
+                    <span class="px-2 py-1 bg-[#82C3C5]/20 text-[#065758] text-xs rounded-full">{{ skill.level|title }}</span>
+                  </div>
+                </div>
+                <div>
+                  <a href="#" class="text-[#82C3C5] hover:text-[#065758] text-sm font-medium">Edit</a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="text-center py-8">
+            <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+            <p class="text-[#065758]/70 mb-4">You haven't added any skills yet.</p>
+            <a href="{{ url_for('add_skill') }}" class="btn-primary px-6 py-2 rounded-full text-white font-semibold">
+                Add Your First Skill
+            </a>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Other sections like Skills Wanted, Swap History could go here -->
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-br from-[#065758] to-[#054a4b] text-white py-20 mt-16">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+        <div class="col-span-1 md:col-span-2">
+          <div class="flex items-center gap-4 mb-8">
+            <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="16" r="16" fill="url(#gradient2)"/>
+              <path d="M10 18c2-4 10-4 12 0" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="12.5" cy="13.5" r="1.5" fill="white"/>
+              <circle cx="19.5" cy="13.5" r="1.5" fill="white"/>
+              <defs>
+                <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#A9D4D6"/>
+                  <stop offset="50%" style="stop-color:#82C3C5"/>
+                  <stop offset="100%" style="stop-color:#c46960"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <span class="text-3xl font-black tracking-tight">SkillVerse</span>
+          </div>
+          <p class="text-xl text-white/85 mb-8 max-w-lg font-medium">
+            Connect, learn, and grow with our vibrant community of skill-swappers and learners.
+          </p>
+          <div class="flex gap-6">
+            <a href="#" class="w-12 h-12 bg-white/15 rounded-full flex items-center justify-center hover:bg-white/25 transition-all duration-300 hover:scale-110 hover:shadow-lg">
+              <span class="text-xl">📘</span>
+            </a>
+            <a href="#" class="w-12 h-12 bg-white/15 rounded-full flex items-center justify-center hover:bg-white/25 transition-all duration-300 hover:scale-110 hover:shadow-lg">
+              <span class="text-xl">🐦</span>
+            </a>
+            <a href="#" class="w-12 h-12 bg-white/15 rounded-full flex items-center justify-center hover:bg-white/25 transition-all duration-300 hover:scale-110 hover:shadow-lg">
+              <span class="text-xl">📷</span>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="font-black text-xl mb-6">Quick Links</h4>
+          <ul class="space-y-4">
+            <li><a href="#" class="text-white/75 hover:text-white transition-colors duration-300 font-medium">About Us</a></li>
+            <li><a href="#" class="text-white/75 hover:text-white transition-colors duration-300 font-medium">Contact</a></li>
+            <li><a href="#" class="text-white/75 hover:text-white transition-colors duration-300 font-medium">Privacy Policy</a></li>
+            <li><a href="#" class="text-white/75 hover:text-white transition-colors duration-300 font-medium">Terms of Service</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-black text-xl mb-6">Support</h4>
+          <ul class="space-y-4">
+            <li><a href="#" class="text-white/75 hover:text-white transition-colors duration-300 font-medium">Help Center</a></li>
+            <li><a href="#" class="text-white/75 hover:text-white transition-colors duration-300 font-medium">FAQ</a></li>
+            <li><a href="#" class="text-white/75 hover:text-white transition-colors duration-300 font-medium">Community</a></li>
+            <li><a href="#" class="text-white/75 hover:text-white transition-colors duration-300 font-medium">Feedback</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-white/25 pt-10 flex flex-col md:flex-row items-center justify-between gap-6">
+        <span class="text-sm text-white/65 font-medium">&copy; 2024 SkillVerse. All rights reserved.</span>
+        <div class="flex gap-8 text-sm">
+          <a href="#" class="text-white/65 hover:text-white transition-colors duration-300 font-medium">Privacy</a>
+          <a href="#" class="text-white/65 hover:text-white transition-colors duration-300 font-medium">Terms</a>
+          <a href="#" class="text-white/65 hover:text-white transition-colors duration-300 font-medium">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

@@ -214,10 +214,10 @@
   <!-- Enhanced Header -->
   <header class="w-full glass sticky top-0 z-50 border-b border-[#0a7a7b]/30 shadow-xl">
     <div class="max-w-7xl mx-auto flex items-center justify-between py-6 px-6">
-              <div class="flex items-center gap-3 animate-slide-in-left">
-          <!-- Enhanced Logo -->
-          <div class="relative">
-            <svg width="44" height="44" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-logo-spin">
+      <div class="flex items-center gap-3 animate-slide-in-left">
+        <!-- Enhanced Logo -->
+        <div class="relative">
+          <svg width="44" height="44" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-logo-spin">
             <circle cx="16" cy="16" r="16" fill="url(#gradient1)"/>
             <path d="M10 18c2-4 10-4 12 0" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
             <circle cx="12.5" cy="13.5" r="1.5" fill="white"/>
@@ -234,17 +234,23 @@
         <span class="text-3xl font-black tracking-tight gradient-text">SkillVerse</span>
       </div>
       <nav class="hidden md:flex gap-8 items-center text-base font-semibold animate-slide-in-right">
-        <a href="index.html" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">
+        <a href="{{ url_for('index') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">
           Home
           <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#0a7a7b] to-[#0c8a8b] transition-all duration-300 group-hover:w-full"></span>
         </a>
-        <a href="signup.html" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">
+        <a href="{{ url_for('signup') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">
           Sign Up
           <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#0a7a7b] to-[#0c8a8b] transition-all duration-300 group-hover:w-full"></span>
         </a>
-                  <a href="#login" class="ml-4 px-8 py-3 rounded-full btn-secondary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform">
-          Login
-        </a>
+        {% if not current_user.is_authenticated %}
+          <a href="{{ url_for('login') }}" class="ml-4 px-8 py-3 rounded-full btn-secondary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform">
+            Login
+          </a>
+        {% else %}
+          <a href="{{ url_for('logout') }}" class="ml-4 px-8 py-3 rounded-full btn-secondary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform">
+            Logout
+          </a>
+        {% endif %}
       </nav>
       <!-- Mobile menu button -->
       <div class="md:hidden flex items-center">
@@ -256,9 +262,13 @@
     <!-- Mobile menu -->
     <div id="mobile-menu" class="md:hidden hidden px-6 pb-6">
       <nav class="flex flex-col gap-4 text-base font-semibold">
-        <a href="index.html" class="hover:text-[#0a7a7b] transition-all duration-300 py-2">Home</a>
-        <a href="signup.html" class="hover:text-[#0a7a7b] transition-all duration-300 py-2">Sign Up</a>
-        <a href="#login" class="mt-2 px-6 py-3 rounded-full btn-secondary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300">Login</a>
+        <a href="{{ url_for('index') }}" class="hover:text-[#0a7a7b] transition-all duration-300 py-2">Home</a>
+        <a href="{{ url_for('signup') }}" class="hover:text-[#0a7a7b] transition-all duration-300 py-2">Sign Up</a>
+        {% if not current_user.is_authenticated %}
+          <a href="{{ url_for('login') }}" class="mt-2 px-6 py-3 rounded-full btn-secondary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300">Login</a>
+        {% else %}
+          <a href="{{ url_for('logout') }}" class="mt-2 px-6 py-3 rounded-full btn-secondary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300">Logout</a>
+        {% endif %}
       </nav>
     </div>
     <script>
@@ -321,7 +331,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Right side - Login Form -->
         <div class="animate-form-slide-in">
           <div class="form-card rounded-3xl shadow-2xl p-10 md:p-12">
@@ -330,17 +340,32 @@
               <p class="text-[#065758]/75 text-lg">Sign in to your account</p>
             </div>
             
-            <form class="space-y-8">
+            <form method="POST" class="space-y-8">
+                {{ form.hidden_tag() }}
               <div>
-                <label class="block text-sm font-bold mb-3 text-[#065758]">Email Address</label>
-                <input type="email" class="input-field w-full px-5 py-4 rounded-xl focus:outline-none" placeholder="john@example.com">
+                <label for="{{ form.email.id }}" class="block text-sm font-bold mb-3 text-[#065758]">{{ form.email.label }}</label>
+                {{ form.email(class="input-field w-full px-5 py-4 rounded-xl focus:outline-none", placeholder="john@example.com") }}
+                {% if form.email.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {% for error in form.email.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
               </div>
-              
+
               <div>
-                <label class="block text-sm font-bold mb-3 text-[#065758]">Password</label>
-                <input type="password" class="input-field w-full px-5 py-4 rounded-xl focus:outline-none" placeholder="••••••••">
+                <label for="{{ form.password.id }}" class="block text-sm font-bold mb-3 text-[#065758]">{{ form.password.label }}</label>
+                {{ form.password(class="input-field w-full px-5 py-4 rounded-xl focus:outline-none", placeholder="••••••••") }}
+                {% if form.password.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {% for error in form.password.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
               </div>
-              
+
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
                   <input type="checkbox" id="remember" class="w-5 h-5 text-[#00ffff] bg-white border-[#00ffff] rounded focus:ring-[#00ffff] focus:ring-2">
@@ -353,7 +378,7 @@
                 Sign In
               </button>
             </form>
-            
+
             <div class="mt-8">
               <div class="relative">
                 <div class="absolute inset-0 flex items-center">
@@ -363,9 +388,9 @@
                   <span class="px-6 bg-white text-[#065758]/75 font-semibold">Or continue with</span>
                 </div>
               </div>
-              
+
               <div class="grid grid-cols-2 gap-6 mt-8">
-                <button class="social-btn flex items-center justify-center gap-3 py-3 px-4 rounded-xl font-semibold hover:scale-105 transition-all duration-300 transform">
+                <button id="google-signin" class="social-btn flex items-center justify-center gap-3 py-3 px-4 rounded-xl font-semibold hover:scale-105 transition-all duration-300 transform">
                   <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -382,13 +407,13 @@
                 </button>
               </div>
             </div>
-            
-                          <div class="text-center mt-10">
-                <p class="text-[#065758]/80 text-lg">
-                  Don't have an account? 
-                  <a href="signup.html" class="text-[#00ffff] hover:underline font-bold">Sign up</a>
-                </p>
-              </div>
+
+            <div class="text-center mt-10">
+              <p class="text-[#065758]/80 text-lg">
+                Don't have an account? 
+                <a href="{{ url_for('signup') }}" class="text-[#00ffff] hover:underline font-bold">Sign up</a>
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -403,15 +428,15 @@
           <div class="flex items-center gap-4 mb-8">
             <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-logo-spin">
               <circle cx="16" cy="16" r="16" fill="url(#gradient2)"/>
-                          <path d="M10 18c2-4 10-4 12 0" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="12.5" cy="13.5" r="1.5" fill="white"/>
-            <circle cx="19.5" cy="13.5" r="1.5" fill="white"/>
+              <path d="M10 18c2-4 10-4 12 0" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="12.5" cy="13.5" r="1.5" fill="white"/>
+              <circle cx="19.5" cy="13.5" r="1.5" fill="white"/>
               <defs>
-                              <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#00ffff"/>
-                <stop offset="50%" style="stop-color:#0a7a7b"/>
-                <stop offset="100%" style="stop-color:#0c8a8b"/>
-              </linearGradient>
+                <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#00ffff"/>
+                  <stop offset="50%" style="stop-color:#0a7a7b"/>
+                  <stop offset="100%" style="stop-color:#0c8a8b"/>
+                </linearGradient>
               </defs>
             </svg>
             <span class="text-3xl font-black tracking-tight">SkillVerse</span>
@@ -463,44 +488,53 @@
       </div>
     </div>
   </footer>
-
+  
   <script>
-    // Form validation and submission
-    const form = document.querySelector('form');
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      
-      // Add loading state
-      const submitBtn = form.querySelector('button[type="submit"]');
-      const originalText = submitBtn.textContent;
-      submitBtn.textContent = 'Signing In...';
-      submitBtn.disabled = true;
-      
-      // Simulate API call
-      setTimeout(() => {
-        submitBtn.textContent = 'Welcome Back!';
-        submitBtn.classList.add('bg-green-500');
+    // Google Sign In functionality
+    document.getElementById('google-signin').addEventListener('click', function() {
+        // Initialize Google Sign-In
+        if (typeof google !== 'undefined' && google.accounts) {
+            google.accounts.id.initialize({
+                client_id: 'YOUR_GOOGLE_CLIENT_ID', // Replace with your actual Google Client ID
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.prompt();
+        } else {
+            alert('Google Sign-In is not available. Please use email/password login.');
+        }
+    });
+
+    function handleCredentialResponse(response) {
+        // Decode the JWT token
+        const responsePayload = JSON.parse(atob(response.credential.split('.')[1]));
         
-        setTimeout(() => {
-          submitBtn.textContent = originalText;
-          submitBtn.disabled = false;
-          submitBtn.classList.remove('bg-green-500');
-          // Redirect to dashboard or show success message
-        }, 2000);
-      }, 2000);
-    });
-    
-    // Input field animations
-    const inputs = document.querySelectorAll('.input-field');
-    inputs.forEach(input => {
-      input.addEventListener('focus', () => {
-        input.parentElement.classList.add('scale-105');
-      });
-      
-      input.addEventListener('blur', () => {
-        input.parentElement.classList.remove('scale-105');
-      });
-    });
+        // Send to backend
+        fetch('/google-auth', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: responsePayload.email,
+                name: responsePayload.name
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                window.location.href = '/dashboard';
+            } else {
+                alert('Login failed: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Login failed. Please try again.');
+        });
+    }
   </script>
+
+  <!-- Google Sign-In API -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </body>
 </html> 

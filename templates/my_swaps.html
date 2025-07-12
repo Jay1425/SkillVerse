@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}My Swaps - SkillVerse{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-6 py-8">
+    <!-- Header -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold gradient-text mb-4">My Swaps</h1>
+        <p class="text-lg text-[#065758]/80 max-w-2xl mx-auto">
+            Track all your skill swap requests and their current status.
+        </p>
+    </div>
+
+    <!-- Create Request Button -->
+    <div class="text-center mb-8">
+        <a href="{{ url_for('create_request') }}" class="btn-primary px-8 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all inline-flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Create New Request
+        </a>
+    </div>
+
+    <!-- Requests List -->
+    {% if requests %}
+        <div class="space-y-6">
+            {% for request in requests %}
+            <div class="glass rounded-2xl p-6 border border-[#A9D4D6]/30">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-2">
+                            <h3 class="text-xl font-bold text-[#065758]">{{ request.title }}</h3>
+                            <span class="px-3 py-1 rounded-full text-xs font-medium
+                                {% if request.status == 'open' %}bg-green-100 text-green-800
+                                {% elif request.status == 'accepted' %}bg-blue-100 text-blue-800
+                                {% elif request.status == 'completed' %}bg-gray-100 text-gray-800
+                                {% else %}bg-red-100 text-red-800{% endif %}">
+                                {{ request.status|title }}
+                            </span>
+                        </div>
+                        <p class="text-[#065758]/70 text-sm mb-4">{{ request.description }}</p>
+                    </div>
+                </div>
+                
+                <!-- Skills Section -->
+                <div class="bg-white/30 rounded-lg p-4 mb-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-semibold text-[#065758] mb-2 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-[#c46960]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Wants to Learn
+                            </h4>
+                            <span class="px-3 py-1 bg-[#c46960]/20 text-[#065758] text-sm rounded-full font-medium">
+                                {{ request.skill_wanted }}
+                            </span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-[#065758] mb-2 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-[#82C3C5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Can Teach
+                            </h4>
+                            <span class="px-3 py-1 bg-[#82C3C5]/20 text-[#065758] text-sm rounded-full font-medium">
+                                {{ request.skill_offered }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Status Details -->
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm text-[#065758]/60">
+                            Created: {{ request.created_at.strftime('%b %d, %Y at %I:%M %p') }}
+                        </span>
+                        {% if request.completed_at %}
+                            <span class="text-sm text-[#065758]/60">
+                                Completed: {{ request.completed_at.strftime('%b %d, %Y at %I:%M %p') }}
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Offerer Info (if accepted) -->
+                {% if request.status == 'accepted' and request.offerer %}
+                <div class="bg-[#82C3C5]/10 rounded-lg p-4 mb-4">
+                    <h4 class="font-semibold text-[#065758] mb-2">Accepted by:</h4>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">{{ request.offerer.username[0]|upper }}</span>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-[#065758]">{{ request.offerer.username }}</p>
+                            <p class="text-xs text-[#065758]/60">Member since {{ request.offerer.created_at.strftime('%b %Y') }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Action Buttons -->
+                <div class="flex gap-3">
+                    {% if request.status == 'accepted' %}
+                        <form method="POST" action="{{ url_for('complete_swap', request_id=request.id) }}" class="flex-1">
+                            <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg font-semibold transition-colors">
+                                Mark as Completed
+                            </button>
+                        </form>
+                    {% elif request.status == 'open' %}
+                        <div class="flex-1 text-center py-2">
+                            <span class="text-[#065758]/60 text-sm">Waiting for someone to accept your request</span>
+                        </div>
+                    {% elif request.status == 'completed' %}
+                        <div class="flex-1 text-center py-2">
+                            <span class="text-green-600 font-semibold">✓ Swap completed successfully!</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- Empty State -->
+        <div class="text-center py-12">
+            <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+            <h3 class="text-xl font-semibold text-[#065758] mb-2">No swap requests yet</h3>
+            <p class="text-[#065758]/70 mb-6">You haven't created any swap requests yet. Start by creating your first request!</p>
+            <a href="{{ url_for('create_request') }}" class="btn-primary px-6 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all">
+                Create Your First Request
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Create Swap Request - SkillVerse{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-6 py-8">
+    <!-- Header -->
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold gradient-text mb-4">Create Swap Request</h1>
+        <p class="text-lg text-[#065758]/80">
+            Find someone to teach you a skill by offering to teach them something in return.
+        </p>
+    </div>
+
+    <!-- Form -->
+    <div class="glass rounded-2xl p-8">
+        <form method="POST" class="space-y-6">
+            {{ form.hidden_tag() }}
+            
+            <div>
+                <label for="{{ form.title.id }}" class="block text-sm font-semibold text-[#065758] mb-2">
+                    {{ form.title.label }}
+                </label>
+                {{ form.title(class="w-full px-4 py-3 rounded-lg border border-[#A9D4D6]/30 bg-white/50 text-[#065758] focus:outline-none focus:ring-2 focus:ring-[#82C3C5] focus:border-transparent", placeholder="e.g., Learn Python Programming") }}
+                {% if form.title.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {% for error in form.title.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="{{ form.description.id }}" class="block text-sm font-semibold text-[#065758] mb-2">
+                    {{ form.description.label }}
+                </label>
+                {{ form.description(class="w-full px-4 py-3 rounded-lg border border-[#A9D4D6]/30 bg-white/50 text-[#065758] focus:outline-none focus:ring-2 focus:ring-[#82C3C5] focus:border-transparent", rows="4", placeholder="Describe what you want to learn, your current level, and any specific goals or preferences...") }}
+                {% if form.description.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {% for error in form.description.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="{{ form.skill_wanted.id }}" class="block text-sm font-semibold text-[#065758] mb-2">
+                        {{ form.skill_wanted.label }}
+                    </label>
+                    {{ form.skill_wanted(class="w-full px-4 py-3 rounded-lg border border-[#A9D4D6]/30 bg-white/50 text-[#065758] focus:outline-none focus:ring-2 focus:ring-[#82C3C5] focus:border-transparent", placeholder="e.g., Python Programming") }}
+                    {% if form.skill_wanted.errors %}
+                        <div class="mt-1 text-red-600 text-sm">
+                            {% for error in form.skill_wanted.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.skill_offered.id }}" class="block text-sm font-semibold text-[#065758] mb-2">
+                        {{ form.skill_offered.label }}
+                    </label>
+                    {{ form.skill_offered(class="w-full px-4 py-3 rounded-lg border border-[#A9D4D6]/30 bg-white/50 text-[#065758] focus:outline-none focus:ring-2 focus:ring-[#82C3C5] focus:border-transparent", placeholder="e.g., Web Design") }}
+                    {% if form.skill_offered.errors %}
+                        <div class="mt-1 text-red-600 text-sm">
+                            {% for error in form.skill_offered.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="pt-4">
+                {{ form.submit(class="w-full btn-primary py-3 rounded-lg text-white font-semibold hover:shadow-lg transition-all") }}
+            </div>
+        </form>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="glass rounded-2xl p-6 mt-8">
+        <h3 class="text-lg font-semibold text-[#065758] mb-4">Tips for a Great Swap Request</h3>
+        <ul class="space-y-2 text-sm text-[#065758]/70">
+            <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-[#82C3C5] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Be clear about what you want to learn and your current level</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-[#82C3C5] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Offer a skill you're confident you can teach well</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-[#82C3C5] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Mention your preferred learning format (online, in-person, etc.)</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-[#82C3C5] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Include any specific goals or projects you want to work on</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Example Section -->
+    <div class="glass rounded-2xl p-6 mt-6">
+        <h3 class="text-lg font-semibold text-[#065758] mb-4">Example Swap Request</h3>
+        <div class="bg-white/30 rounded-lg p-4">
+            <h4 class="font-semibold text-[#065758] mb-2">Learn Python Programming</h4>
+            <p class="text-sm text-[#065758]/70 mb-3">
+                I'm a beginner in programming and want to learn Python. I'm interested in web development and data analysis. 
+                I prefer learning through practical projects and examples. I can offer to teach Spanish conversation and grammar 
+                in exchange, as I'm a native speaker with teaching experience.
+            </p>
+            <div class="flex gap-2">
+                <span class="px-2 py-1 bg-[#c46960]/20 text-[#065758] text-xs rounded-full">Wants: Python Programming</span>
+                <span class="px-2 py-1 bg-[#82C3C5]/20 text-[#065758] text-xs rounded-full">Offers: Spanish</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-fill skill_wanted from URL parameter
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const skillWanted = urlParams.get('skill_wanted');
+    if (skillWanted) {
+        document.getElementById('skill_wanted').value = skillWanted;
+    }
+});
+</script>
+{% endblock %} 
