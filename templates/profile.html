@@ -1,328 +1,489 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>User Profile - SkillVerse</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ user.username }} - SkillVerse Profile</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    html { font-family: 'Inter', 'Segoe UI', sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
     
-    /* General Styles & Animations */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
+    * {
+      font-family: 'Inter', sans-serif;
     }
     
+    /* Glassmorphism effect */
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Gradient text animation */
+    .gradient-text {
+      background: linear-gradient(135deg, #00ffff, #0a7a7b, #0c8a8b, #00ffff);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: textGlow 3s ease-in-out infinite;
+    }
+    
+    @keyframes textGlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    /* Logo spin animation */
+    @keyframes logoSpin {
+      0% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5)); }
+      50% { transform: rotate(180deg) scale(1.1); filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.8)); }
+      100% { transform: rotate(360deg) scale(1); filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5)); }
+    }
+    
+    .animate-logo-spin {
+      animation: logoSpin 4s ease-in-out infinite;
+    }
+    
+    /* Slide in animations */
     @keyframes slideInLeft {
-      from { opacity: 0; transform: translateX(-60px); }
+      from { opacity: 0; transform: translateX(-50px); }
       to { opacity: 1; transform: translateX(0); }
     }
     
     @keyframes slideInRight {
-      from { opacity: 0; transform: translateX(60px); }
+      from { opacity: 0; transform: translateX(50px); }
       to { opacity: 1; transform: translateX(0); }
     }
     
-    .animate-fade-in-up { animation: fadeInUp 1s ease-out; }
-    .animate-slide-in-left { animation: slideInLeft 1s ease-out; }
-    .animate-slide-in-right { animation: slideInRight 1s ease-out; }
-    
-    /* Glassmorphism Effect */
-    .glass {
-      backdrop-filter: blur(20px);
-      background: rgba(226, 240, 239, 0.25);
-      border: 1px solid rgba(169, 212, 214, 0.3);
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     
-    /* Gradient Text */
-    .gradient-text {
-      background: linear-gradient(135deg, #A9D4D6, #82C3C5, #c46960);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .animate-slide-in-left {
+      animation: slideInLeft 0.8s ease-out;
     }
     
-    /* Buttons */
+    .animate-slide-in-right {
+      animation: slideInRight 0.8s ease-out;
+    }
+    
+    .animate-slide-in-up {
+      animation: slideInUp 0.8s ease-out;
+    }
+    
+    /* Floating animation */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    /* Pulse animation */
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.05); }
+    }
+    
+    .animate-pulse-slow {
+      animation: pulse-slow 4s ease-in-out infinite;
+    }
+    
+    /* Button styles */
     .btn-primary {
-      background: linear-gradient(135deg, #A9D4D6, #82C3C5);
-      box-shadow: 0 8px 25px rgba(169, 212, 214, 0.4);
+      background: linear-gradient(135deg, #00ffff, #0a7a7b);
+      box-shadow: 0 8px 25px rgba(0, 255, 255, 0.4);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .btn-primary:hover {
-      background: linear-gradient(135deg, #82C3C5, #A9D4D6);
-      box-shadow: 0 12px 35px rgba(130, 195, 197, 0.5);
+      background: linear-gradient(135deg, #0a7a7b, #0c8a8b);
+      box-shadow: 0 12px 35px rgba(0, 255, 255, 0.5);
       transform: translateY(-2px);
     }
     
     .btn-secondary {
-      background: linear-gradient(135deg, #c46960, #d17a72);
-      box-shadow: 0 8px 25px rgba(196, 105, 96, 0.4);
+      background: linear-gradient(135deg, #f5576c, #f093fb);
+      box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .btn-secondary:hover {
-      background: linear-gradient(135deg, #d17a72, #c46960);
-      box-shadow: 0 12px 35px rgba(209, 122, 114, 0.5);
+      background: linear-gradient(135deg, #f5576c, #f093fb);
+      box-shadow: 0 12px 35px rgba(245, 87, 108, 0.5);
       transform: translateY(-2px);
     }
-
-    /* Card Enhancements */
+    
+    /* Card enhancements */
     .profile-card {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 255, 0.9));
-        border: 1px solid rgba(169, 212, 214, 0.3);
-        backdrop-filter: blur(30px);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 255, 0.9));
+      border: 2px solid rgba(0, 255, 255, 0.2);
+      backdrop-filter: blur(30px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
     }
+    
     .profile-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 25px 50px rgba(169, 212, 214, 0.3);
-        border-color: rgba(169, 212, 214, 0.5);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(248, 250, 255, 0.95));
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+      border-color: rgba(0, 255, 255, 0.3);
     }
-
-    .skill-list-item {
-        background: rgba(255, 255, 255, 0.6);
-        border-left: 4px solid #A9D4D6;
-        transition: all 0.3s ease;
+    
+    /* Skill tags */
+    .skill-tag {
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(10, 122, 123, 0.2));
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      color: #065758;
+      transition: all 0.3s ease;
     }
-    .skill-list-item:hover {
-        background: rgba(255, 255, 255, 0.8);
-        border-left-color: #82C3C5;
-        transform: translateX(5px);
+    
+    .skill-tag:hover {
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(10, 122, 123, 0.3));
+      transform: translateY(-2px);
+    }
+    
+    /* Profile photo */
+    .profile-photo {
+      background: linear-gradient(135deg, #00ffff, #0a7a7b);
+      border: 4px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Rating stars */
+    .star-filled {
+      color: #fbbf24;
+    }
+    
+    .star-empty {
+      color: #d1d5db;
+    }
+    
+    /* Toggle switch */
+    .toggle-switch {
+      position: relative;
+      width: 60px;
+      height: 30px;
+      background: #d1d5db;
+      border-radius: 15px;
+      transition: all 0.3s ease;
+    }
+    
+    .toggle-switch.active {
+      background: #00ffff;
+    }
+    
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 26px;
+      height: 26px;
+      background: white;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+    
+    .toggle-switch.active::after {
+      transform: translateX(30px);
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-[#E2F0EF] via-[#A9D4D6]/50 to-[#82C3C5]/40 text-[#065758] overflow-x-hidden">
-  <!-- Header -->
-  <header class="w-full glass sticky top-0 z-50 border-b border-[#A9D4D6]/30 shadow-xl">
+<body class="bg-gradient-to-br from-[#065758] via-[#0a7a7b]/50 to-[#0c8a8b]/40 text-white overflow-x-hidden min-h-screen">
+  <!-- Enhanced Header -->
+  <header class="w-full glass sticky top-0 z-50 border-b border-[#0a7a7b]/30 shadow-xl">
     <div class="max-w-7xl mx-auto flex items-center justify-between py-6 px-6">
       <div class="flex items-center gap-3 animate-slide-in-left">
+        <!-- Enhanced Logo -->
         <div class="relative">
-          <svg width="44" height="44" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="44" height="44" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-logo-spin">
             <circle cx="16" cy="16" r="16" fill="url(#gradient1)"/>
-            <path d="M10 18c2-4 10-4 12 0" stroke="#065758" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="12.5" cy="13.5" r="1.5" fill="#065758"/>
-            <circle cx="19.5" cy="13.5" r="1.5" fill="#065758"/>
+            <path d="M10 18c2-4 10-4 12 0" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="12.5" cy="13.5" r="1.5" fill="white"/>
+            <circle cx="19.5" cy="13.5" r="1.5" fill="white"/>
             <defs>
               <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#A9D4D6"/>
-                <stop offset="50%" style="stop-color:#82C3C5"/>
-                <stop offset="100%" style="stop-color:#c46960"/>
+                <stop offset="0%" style="stop-color:#00ffff"/>
+                <stop offset="50%" style="stop-color:#0a7a7b"/>
+                <stop offset="100%" style="stop-color:#0c8a8b"/>
               </linearGradient>
             </defs>
           </svg>
         </div>
         <span class="text-3xl font-black tracking-tight gradient-text">SkillVerse</span>
       </div>
+      
+      <!-- Navigation -->
       <nav class="hidden md:flex gap-8 items-center text-base font-semibold animate-slide-in-right">
-        <a href="{{ url_for('index') }}" class="hover:text-[#82C3C5] transition-all duration-300 relative group">
-          Home
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <a href="{{ url_for('browse') }}" class="hover:text-[#82C3C5] transition-all duration-300 relative group">
-          Browse Skills
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <a href="{{ url_for('requests') }}" class="hover:text-[#82C3C5] transition-all duration-300 relative group">
-          Requests
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <a href="{{ url_for('dashboard') }}" class="hover:text-[#82C3C5] transition-all duration-300 relative group">
+        <a href="{{ url_for('dashboard') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">
           Dashboard
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] transition-all duration-300 group-hover:w-full"></span>
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#0a7a7b] to-[#0c8a8b] transition-all duration-300 group-hover:w-full"></span>
         </a>
-        {% if current_user.is_authenticated %}
-          <a href="{{ url_for('logout') }}" class="ml-4 px-8 py-3 rounded-full btn-secondary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform">
-            Logout
-          </a>
-        {% else %}
-          <a href="{{ url_for('login') }}" class="hover:text-[#82C3C5] transition-all duration-300 relative group">
-            Login
-            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] transition-all duration-300 group-hover:w-full"></span>
-          </a>
-          <a href="{{ url_for('signup') }}" class="ml-4 px-8 py-3 rounded-full btn-primary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform">
-            Sign Up
-          </a>
-        {% endif %}
+        <a href="{{ url_for('browse') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">
+          Browse Skills
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#0a7a7b] to-[#0c8a8b] transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a href="{{ url_for('my_swaps') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">
+          My Swaps
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#0a7a7b] to-[#0c8a8b] transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a href="{{ url_for('requests') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">
+          Requests
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#0a7a7b] to-[#0c8a8b] transition-all duration-300 group-hover:w-full"></span>
+        </a>
       </nav>
-      <!-- Mobile menu button -->
-      <div class="md:hidden flex items-center">
-        <button id="mobile-menu-btn" class="p-2 rounded-lg hover:bg-[#A9D4D6]/30 focus:outline-none transition-all duration-300">
-          <svg class="w-7 h-7" fill="none" stroke="#065758" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
-        </button>
+      
+      <!-- User Menu -->
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
+          <div class="profile-photo w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg">
+            {{ user.username[0]|upper }}
+          </div>
+          <div class="hidden md:block">
+            <p class="font-semibold">{{ user.username }}</p>
+            <p class="text-sm text-white/70">Online</p>
+          </div>
+        </div>
+        <a href="{{ url_for('logout') }}" class="btn-secondary px-6 py-2 rounded-full text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform">
+          Logout
+        </a>
       </div>
     </div>
-    <!-- Mobile menu -->
-    <div id="mobile-menu" class="md:hidden hidden px-6 pb-6">
-      <nav class="flex flex-col gap-4 text-base font-semibold">
-        <a href="{{ url_for('index') }}" class="hover:text-[#82C3C5] transition-all duration-300 py-2">Home</a>
-        <a href="{{ url_for('browse') }}" class="hover:text-[#82C3C5] transition-all duration-300 py-2">Browse Skills</a>
-        <a href="{{ url_for('requests') }}" class="hover:text-[#82C3C5] transition-all duration-300 py-2">Requests</a>
-        <a href="{{ url_for('dashboard') }}" class="hover:text-[#82C3C5] transition-all duration-300 py-2">Dashboard</a>
-        {% if current_user.is_authenticated %}
-          <a href="{{ url_for('logout') }}" class="mt-2 px-6 py-3 rounded-full btn-secondary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300">Logout</a>
-        {% else %}
-          <a href="{{ url_for('login') }}" class="mt-2 px-6 py-3 rounded-full btn-secondary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300">Login</a>
-          <a href="{{ url_for('signup') }}" class="mt-2 px-6 py-3 rounded-full btn-primary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300">Sign Up</a>
-        {% endif %}
-      </nav>
-    </div>
-    <script>
-      const btn = document.getElementById('mobile-menu-btn');
-      const menu = document.getElementById('mobile-menu');
-      btn.addEventListener('click', () => {
-        menu.classList.toggle('hidden');
-        btn.classList.toggle('bg-[#A9D4D6]/30');
-      });
-    </script>
   </header>
 
-  <!-- User Profile Section -->
-  <section class="relative py-16">
-    <div class="max-w-4xl mx-auto px-6">
-      <div class="profile-card rounded-3xl p-8 mb-8 text-center animate-fade-in-up">
-        <div class="relative w-32 h-32 mx-auto mb-6">
-          <img src="https://www.gravatar.com/avatar/{{ user.email|hash('md5') }}?d=identicon&s=128" 
-               alt="{{ user.username }}'s profile picture" 
-               class="w-full h-full rounded-full object-cover border-4 border-[#A9D4D6] shadow-lg">
-          <span class="absolute bottom-0 right-0 w-8 h-8 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
-            {{ user.username[0]|upper }}
-          </span>
-        </div>
-        <h1 class="text-4xl font-bold gradient-text mb-2">{{ user.username }}</h1>
-        <p class="text-lg text-[#065758]/80 mb-4">{{ user.bio if user.bio else "No bio available." }}</p>
-        
-        <div class="flex items-center justify-center gap-4 text-sm text-[#065758]/60 mb-6">
-          {% if user.location %}
-            <span class="flex items-center gap-1">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z"/></svg>
-              {{ user.location }}
+  <!-- Profile Content -->
+  <div class="max-w-6xl mx-auto px-6 py-8">
+    <!-- Profile Header -->
+    <div class="profile-card rounded-3xl p-8 mb-8 animate-slide-in-up">
+      <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+        <!-- Profile Photo Section -->
+        <div class="text-center md:text-left">
+          <div class="relative w-32 h-32 mx-auto md:mx-0 mb-4">
+            <img src="https://www.gravatar.com/avatar/{{ user.email|hash('md5') }}?d=identicon&s=128" 
+                 alt="{{ user.username }}'s profile picture" 
+                 class="w-full h-full rounded-full object-cover border-4 border-[#A9D4D6] shadow-lg">
+            <span class="absolute bottom-0 right-0 w-8 h-8 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
+              {{ user.username[0]|upper }}
             </span>
-          {% endif %}
-          <span class="flex items-center gap-1">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h.01M12 11h.01M15 11h.01M9 15h.01M12 15h.01M15 15h.01M3 21h18a2 2 0 002-2V7a2 2 0 00-2-2H3a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            Joined: {{ user.created_at.strftime('%b %d, %Y') }}
-          </span>
+          </div>
+          <button class="text-[#00ffff] hover:text-[#0a7a7b] font-semibold text-sm">Change Photo</button>
         </div>
-
-        <div class="flex flex-wrap gap-4 justify-center">
-          <a href="#" class="btn-primary px-6 py-2 rounded-full text-white font-semibold hover:shadow-lg transition-all">
-            Edit Profile
-          </a>
-          <a href="{{ url_for('my_swaps') }}" class="btn-secondary px-6 py-2 rounded-full text-white font-semibold hover:shadow-lg transition-all">
-            My Swaps
-          </a>
+        
+        <!-- Profile Info -->
+        <div class="flex-1 text-center md:text-left">
+          <div class="flex items-center justify-center md:justify-start gap-4 mb-4">
+            <h1 class="text-4xl font-black text-[#065758]">{{ user.username }}</h1>
+            <span class="bg-gradient-to-r from-[#10b981] to-[#059669] text-white px-3 py-1 rounded-full text-sm font-bold">Public Profile</span>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <p class="text-[#065758]/70 mb-1">📍 Location</p>
+              <p class="text-[#065758] font-semibold">{{ user.location if user.location else "Not specified" }}</p>
+            </div>
+            <div>
+              <p class="text-[#065758]/70 mb-1">📅 Member Since</p>
+              <p class="text-[#065758] font-semibold">{{ user.created_at.strftime('%B %Y') }}</p>
+            </div>
+            <div>
+              <p class="text-[#065758]/70 mb-1">📝 Bio</p>
+              <p class="text-[#065758] font-semibold">{{ user.bio if user.bio else "No bio available" }}</p>
+            </div>
+            <div>
+              <p class="text-[#065758]/70 mb-1">⭐ Rating</p>
+              <div class="flex items-center gap-1">
+                <div class="flex">
+                  <svg class="w-5 h-5 star-filled" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                  <svg class="w-5 h-5 star-filled" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                  <svg class="w-5 h-5 star-filled" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                  <svg class="w-5 h-5 star-filled" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                  <svg class="w-5 h-5 star-filled" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                </div>
+                <span class="text-[#065758] font-semibold">4.8 (24 reviews)</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="{{ url_for('edit_profile') }}" class="btn-primary px-8 py-3 rounded-xl text-white font-bold">
+              Edit Profile
+            </a>
+            <a href="{{ url_for('settings') }}" class="bg-white border border-[#065758]/30 px-8 py-3 rounded-xl text-[#065758] font-bold hover:bg-[#065758]/5 transition-all duration-300">
+              Settings
+            </a>
+            <a href="{{ url_for('create_request') }}" class="bg-white border border-[#065758]/30 px-8 py-3 rounded-xl text-[#065758] font-bold hover:bg-[#065758]/5 transition-all duration-300">
+              Request Swap
+            </a>
+          </div>
         </div>
       </div>
+    </div>
 
-      <!-- Skills Offering Section -->
-      <div class="profile-card rounded-3xl p-8 mb-8 animate-fade-in-up" style="animation-delay: 0.2s;">
-        <h2 class="text-2xl font-bold text-[#065758] mb-6">Skills I Can Teach</h2>
-        {% if skills %}
-          <div class="space-y-4">
+    <!-- Skills Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Skills Offered -->
+      <div class="profile-card rounded-2xl p-6 animate-slide-in-left">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-2xl font-black text-[#065758]">Skills Offered</h3>
+          <a href="{{ url_for('add_skill') }}" class="text-[#00ffff] hover:text-[#0a7a7b] font-semibold">+ Add Skill</a>
+        </div>
+        
+        <div class="space-y-4">
+          {% if skills %}
             {% for skill in skills %}
-              <div class="skill-list-item rounded-lg p-4 flex items-center justify-between shadow-sm">
+              <div class="skill-tag px-4 py-3 rounded-xl flex items-center justify-between">
                 <div>
-                  <h3 class="font-semibold text-[#065758]">{{ skill.name }}</h3>
-                  <p class="text-sm text-[#065758]/70">{{ skill.description[:70] }}{% if skill.description|length > 70 %}...{% endif %}</p>
+                  <span class="font-bold text-lg">{{ skill.name }}</span>
+                  <p class="text-sm text-[#065758]/70 mt-1">{{ skill.description[:50] }}{% if skill.description|length > 50 %}...{% endif %}</p>
                   <div class="flex gap-2 mt-2">
                     <span class="px-2 py-1 bg-[#A9D4D6]/20 text-[#065758] text-xs rounded-full">{{ skill.category|title }}</span>
                     <span class="px-2 py-1 bg-[#82C3C5]/20 text-[#065758] text-xs rounded-full">{{ skill.level|title }}</span>
                   </div>
                 </div>
-                <div>
-                  <a href="#" class="text-[#82C3C5] hover:text-[#065758] text-sm font-medium">Edit</a>
-                </div>
+                <button class="text-[#065758]/50 hover:text-[#065758] text-xl">×</button>
               </div>
             {% endfor %}
-          </div>
-        {% else %}
-          <div class="text-center py-8">
-            <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-            </svg>
-            <p class="text-[#065758]/70 mb-4">You haven't added any skills yet.</p>
-            <a href="{{ url_for('add_skill') }}" class="btn-primary px-6 py-2 rounded-full text-white font-semibold">
-                Add Your First Skill
-            </a>
-          </div>
-        {% endif %}
+          {% else %}
+            <div class="text-center py-8">
+              <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+              </svg>
+              <p class="text-[#065758]/70 mb-4">You haven't added any skills yet.</p>
+              <a href="{{ url_for('add_skill') }}" class="btn-primary px-6 py-2 rounded-full text-white font-semibold">
+                  Add Your First Skill
+              </a>
+            </div>
+          {% endif %}
+        </div>
       </div>
 
-      <!-- Other sections like Skills Wanted, Swap History could go here -->
-
+      <!-- Skills Wanted -->
+      <div class="profile-card rounded-2xl p-6 animate-slide-in-right">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-2xl font-black text-[#065758]">Skills Wanted</h3>
+          <a href="{{ url_for('create_request') }}" class="text-[#00ffff] hover:text-[#0a7a7b] font-semibold">+ Add Request</a>
+        </div>
+        
+        <div class="space-y-4">
+          <div class="skill-tag px-4 py-3 rounded-xl flex items-center justify-between">
+            <div>
+              <span class="font-bold text-lg">Cooking</span>
+              <p class="text-sm text-[#065758]/70 mt-1">Italian, French, Asian Cuisine</p>
+            </div>
+            <button class="text-[#065758]/50 hover:text-[#065758] text-xl">×</button>
+          </div>
+          
+          <div class="skill-tag px-4 py-3 rounded-xl flex items-center justify-between">
+            <div>
+              <span class="font-bold text-lg">Guitar Lessons</span>
+              <p class="text-sm text-[#065758]/70 mt-1">Acoustic, Electric, Theory</p>
+            </div>
+            <button class="text-[#065758]/50 hover:text-[#065758] text-xl">×</button>
+          </div>
+          
+          <div class="skill-tag px-4 py-3 rounded-xl flex items-center justify-between">
+            <div>
+              <span class="font-bold text-lg">Yoga</span>
+              <p class="text-sm text-[#065758]/70 mt-1">Vinyasa, Hatha, Meditation</p>
+            </div>
+            <button class="text-[#065758]/50 hover:text-[#065758] text-xl">×</button>
+          </div>
+        </div>
+      </div>
     </div>
-  </section>
 
-  <!-- Footer -->
-  <footer class="bg-gradient-to-br from-[#065758] to-[#054a4b] text-white py-20 mt-16">
-    <div class="max-w-7xl mx-auto px-6">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-        <div class="col-span-1 md:col-span-2">
-          <div class="flex items-center gap-4 mb-8">
-            <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="16" cy="16" r="16" fill="url(#gradient2)"/>
-              <path d="M10 18c2-4 10-4 12 0" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-              <circle cx="12.5" cy="13.5" r="1.5" fill="white"/>
-              <circle cx="19.5" cy="13.5" r="1.5" fill="white"/>
-              <defs>
-                <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" style="stop-color:#A9D4D6"/>
-                  <stop offset="50%" style="stop-color:#82C3C5"/>
-                  <stop offset="100%" style="stop-color:#c46960"/>
-                </linearGradient>
-              </defs>
-            </svg>
-            <span class="text-3xl font-black tracking-tight">SkillVerse</span>
-          </div>
-          <p class="text-xl text-white/85 mb-8 max-w-lg font-medium">
-            Connect, learn, and grow with our vibrant community of skill-swappers and learners.
-          </p>
-          <div class="flex gap-6">
-            <a href="#" class="w-12 h-12 bg-white/15 rounded-full flex items-center justify-center hover:bg-white/25 transition-all duration-300 hover:scale-110 hover:shadow-lg">
-              <span class="text-xl">📘</span>
-            </a>
-            <a href="#" class="w-12 h-12 bg-white/15 rounded-full flex items-center justify-center hover:bg-white/25 transition-all duration-300 hover:scale-110 hover:shadow-lg">
-              <span class="text-xl">🐦</span>
-            </a>
-            <a href="#" class="w-12 h-12 bg-white/15 rounded-full flex items-center justify-center hover:bg-white/25 transition-all duration-300 hover:scale-110 hover:shadow-lg">
-              <span class="text-xl">📷</span>
-            </a>
-          </div>
-        </div>
-        
-        <div>
-          <h4 class="font-black text-xl mb-6">Quick Links</h4>
-          <ul class="space-y-4">
-            <li><a href="#" class="text-white/75 hover:text-white transition-colors duration-300 font-medium">About Us</a></li>
-            <li><a href="#" class="text-white/75 hover:text-white transition-colors duration-300 font-medium">Contact</a></li>
-            <li><a href="#" class="text-white/75 hover:text-white transition-colors duration-300 font-medium">Privacy Policy</a></li>
-            <li><a href="#" class="text-white/75 hover:text-white transition-colors duration-300 font-medium">Terms of Service</a></li>
-          </ul>
-        </div>
-        
-        <div>
-          <h4 class="font-black text-xl mb-6">Support</h4>
-          <ul class="space-y-4">
-            <li><a href="#" class="text-white/75 hover:text-white transition-colors duration-300 font-medium">Help Center</a></li>
-            <li><a href="#" class="text-white/75 hover:text-white transition-colors duration-300 font-medium">FAQ</a></li>
-            <li><a href="#" class="text-white/75 hover:text-white transition-colors duration-300 font-medium">Community</a></li>
-            <li><a href="#" class="text-white/75 hover:text-white transition-colors duration-300 font-medium">Feedback</a></li>
-          </ul>
-        </div>
-      </div>
+    <!-- Profile Settings -->
+    <div class="profile-card rounded-2xl p-6 mt-8 animate-slide-in-up">
+      <h3 class="text-2xl font-black text-[#065758] mb-6">Profile Settings</h3>
       
-      <div class="border-t border-white/25 pt-10 flex flex-col md:flex-row items-center justify-between gap-6">
-        <span class="text-sm text-white/65 font-medium">&copy; 2024 SkillVerse. All rights reserved.</span>
-        <div class="flex gap-8 text-sm">
-          <a href="#" class="text-white/65 hover:text-white transition-colors duration-300 font-medium">Privacy</a>
-          <a href="#" class="text-white/65 hover:text-white transition-colors duration-300 font-medium">Terms</a>
-          <a href="#" class="text-white/65 hover:text-white transition-colors duration-300 font-medium">Cookies</a>
+      <div class="space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h4 class="font-bold text-[#065758] mb-1">Profile Visibility</h4>
+            <p class="text-sm text-[#065758]/70">Make your profile visible to other users</p>
+          </div>
+          <div class="toggle-switch active cursor-pointer" onclick="this.classList.toggle('active')"></div>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <h4 class="font-bold text-[#065758] mb-1">Email Notifications</h4>
+            <p class="text-sm text-[#065758]/70">Receive notifications about swap requests</p>
+          </div>
+          <div class="toggle-switch active cursor-pointer" onclick="this.classList.toggle('active')"></div>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <h4 class="font-bold text-[#065758] mb-1">Push Notifications</h4>
+            <p class="text-sm text-[#065758]/70">Get push notifications on your device</p>
+          </div>
+          <div class="toggle-switch cursor-pointer" onclick="this.classList.toggle('active')"></div>
         </div>
       </div>
     </div>
-  </footer>
+
+    <!-- Recent Activity -->
+    <div class="profile-card rounded-2xl p-6 mt-8 animate-slide-in-up">
+      <h3 class="text-2xl font-black text-[#065758] mb-6">Recent Activity</h3>
+      
+      <div class="space-y-4">
+        <div class="flex items-center gap-4 p-4 border border-[#065758]/20 rounded-xl">
+          <div class="w-10 h-10 bg-gradient-to-r from-[#10b981] to-[#059669] rounded-full flex items-center justify-center text-white font-bold">
+            ✓
+          </div>
+          <div class="flex-1">
+            <p class="font-semibold text-[#065758]">Completed swap with Sarah Miller</p>
+            <p class="text-sm text-[#065758]/70">Spanish Tutoring ↔ Cooking Classes</p>
+          </div>
+          <span class="text-sm text-[#065758]/70">2 days ago</span>
+        </div>
+        
+        <div class="flex items-center gap-4 p-4 border border-[#065758]/20 rounded-xl">
+          <div class="w-10 h-10 bg-gradient-to-r from-[#3b82f6] to-[#2563eb] rounded-full flex items-center justify-center text-white font-bold">
+            ⭐
+          </div>
+          <div class="flex-1">
+            <p class="font-semibold text-[#065758]">Received 5-star rating</p>
+            <p class="text-sm text-[#065758]/70">"Excellent Spanish tutor! Very patient and knowledgeable."</p>
+          </div>
+          <span class="text-sm text-[#065758]/70">3 days ago</span>
+        </div>
+        
+        <div class="flex items-center gap-4 p-4 border border-[#065758]/20 rounded-xl">
+          <div class="w-10 h-10 bg-gradient-to-r from-[#f093fb] to-[#f5576c] rounded-full flex items-center justify-center text-white font-bold">
+            +
+          </div>
+          <div class="flex-1">
+            <p class="font-semibold text-[#065758]">Added new skill: Photography</p>
+            <p class="text-sm text-[#065758]/70">Portrait, Landscape, Street Photography</p>
+          </div>
+          <span class="text-sm text-[#065758]/70">1 week ago</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced animated background shapes -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute left-10 top-20 w-80 h-80 bg-gradient-to-r from-[#00ffff] to-[#0a7a7b] rounded-full opacity-40 blur-3xl animate-float"></div>
+    <div class="absolute right-10 bottom-20 w-96 h-96 bg-gradient-to-l from-[#0c8a8b] to-[#00ffff] rounded-full opacity-35 blur-3xl animate-float" style="animation-delay: 1s;"></div>
+    <div class="absolute left-1/2 top-1/2 w-72 h-72 bg-gradient-to-br from-[#00ffff] to-[#0d9a9b] rounded-full opacity-30 blur-3xl animate-pulse-slow"></div>
+    <div class="absolute left-1/4 bottom-1/4 w-64 h-64 bg-gradient-to-tr from-[#0a7a7b] to-[#00ffff] rounded-full opacity-25 blur-3xl animate-float" style="animation-delay: 2s;"></div>
+  </div>
 </body>
 </html>

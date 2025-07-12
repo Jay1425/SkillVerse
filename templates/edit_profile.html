@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile - SkillVerse</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    /* Glassmorphism effect */
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Gradient text animation */
+    .gradient-text {
+      background: linear-gradient(135deg, #00ffff, #0a7a7b, #0c8a8b, #00ffff);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: textGlow 3s ease-in-out infinite;
+    }
+    
+    @keyframes textGlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    /* Logo spin animation */
+    @keyframes logoSpin {
+      0% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5)); }
+      50% { transform: rotate(180deg) scale(1.1); filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.8)); }
+      100% { transform: rotate(360deg) scale(1); filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5)); }
+    }
+    
+    .animate-logo-spin {
+      animation: logoSpin 4s ease-in-out infinite;
+    }
+    
+    /* Slide in animations */
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .animate-slide-in-left {
+      animation: slideInLeft 0.8s ease-out;
+    }
+    
+    .animate-slide-in-right {
+      animation: slideInRight 0.8s ease-out;
+    }
+    
+    .animate-slide-in-up {
+      animation: slideInUp 0.8s ease-out;
+    }
+    
+    /* Floating animation */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    /* Pulse animation */
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.05); }
+    }
+    
+    .animate-pulse-slow {
+      animation: pulse-slow 4s ease-in-out infinite;
+    }
+    
+    /* Button styles */
+    .btn-primary {
+      background: linear-gradient(135deg, #00ffff, #0a7a7b);
+      box-shadow: 0 8px 25px rgba(0, 255, 255, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0a7a7b, #0c8a8b);
+      box-shadow: 0 12px 35px rgba(0, 255, 255, 0.5);
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #f5576c, #f093fb);
+      box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #f5576c, #f093fb);
+      box-shadow: 0 12px 35px rgba(245, 87, 108, 0.5);
+      transform: translateY(-2px);
+    }
+    
+    /* Card enhancements */
+    .profile-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 255, 0.9));
+      border: 2px solid rgba(0, 255, 255, 0.2);
+      backdrop-filter: blur(30px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+    
+    .profile-card:hover {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(248, 250, 255, 0.95));
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+      border-color: rgba(0, 255, 255, 0.3);
+    }
+    
+    /* Form styles */
+    .form-input {
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid rgba(0, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 12px 16px;
+      transition: all 0.3s ease;
+      color: #065758;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #00ffff;
+      box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 1);
+    }
+    
+    .form-label {
+      color: #065758;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+    }
+    
+    /* Profile photo */
+    .profile-photo {
+      background: linear-gradient(135deg, #00ffff, #0a7a7b);
+      border: 4px solid rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-[#065758] via-[#0a7a7b]/50 to-[#0c8a8b]/40 text-white overflow-x-hidden min-h-screen">
+  <!-- Enhanced Header -->
+  <header class="w-full glass sticky top-0 z-50 border-b border-[#0a7a7b]/30 shadow-xl">
+    <div class="max-w-7xl mx-auto flex items-center justify-between py-6 px-6">
+      <div class="flex items-center gap-3 animate-slide-in-left">
+        <!-- Enhanced Logo -->
+        <div class="relative">
+          <svg width="44" height="44" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-logo-spin">
+            <circle cx="16" cy="16" r="16" fill="url(#gradient1)"/>
+            <path d="M10 18c2-4 10-4 12 0" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="12.5" cy="13.5" r="1.5" fill="white"/>
+            <circle cx="19.5" cy="13.5" r="1.5" fill="white"/>
+            <defs>
+              <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00ffff"/>
+                <stop offset="50%" style="stop-color:#0a7a7b"/>
+                <stop offset="100%" style="stop-color:#0c8a8b"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="text-3xl font-black tracking-tight gradient-text">SkillVerse</span>
+      </div>
+      
+      <!-- Navigation -->
+      <nav class="hidden md:flex gap-8 items-center text-base font-semibold animate-slide-in-right">
+        <a href="{{ url_for('dashboard') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">
+          Dashboard
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#0a7a7b] to-[#0c8a8b] transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a href="{{ url_for('browse') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">
+          Browse Skills
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#0a7a7b] to-[#0c8a8b] transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a href="{{ url_for('my_swaps') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">
+          My Swaps
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#0a7a7b] to-[#0c8a8b] transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a href="{{ url_for('requests') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">
+          Requests
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#0a7a7b] to-[#0c8a8b] transition-all duration-300 group-hover:w-full"></span>
+        </a>
+      </nav>
+      
+      <!-- User Menu -->
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
+          <div class="profile-photo w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg">
+            {{ user.username[0]|upper }}
+          </div>
+          <div class="hidden md:block">
+            <p class="font-semibold">{{ user.username }}</p>
+            <p class="text-sm text-white/70">Online</p>
+          </div>
+        </div>
+        <a href="{{ url_for('logout') }}" class="btn-secondary px-6 py-2 rounded-full text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform">
+          Logout
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Edit Profile Content -->
+  <div class="max-w-4xl mx-auto px-6 py-8">
+    <!-- Page Header -->
+    <div class="text-center mb-8 animate-slide-in-up">
+      <h1 class="text-4xl font-black text-white mb-4">Edit Profile</h1>
+      <p class="text-lg text-white/80">Update your personal information and preferences</p>
+    </div>
+
+    <!-- Edit Profile Form -->
+    <div class="profile-card rounded-3xl p-8 animate-slide-in-up">
+      <form method="POST" class="space-y-6">
+        {{ form.hidden_tag() }}
+        
+        <!-- Profile Photo Section -->
+        <div class="text-center mb-8">
+          <div class="relative w-32 h-32 mx-auto mb-4">
+            <img src="https://www.gravatar.com/avatar/{{ user.email|hash('md5') }}?d=identicon&s=128" 
+                 alt="{{ user.username }}'s profile picture" 
+                 class="w-full h-full rounded-full object-cover border-4 border-[#A9D4D6] shadow-lg">
+            <span class="absolute bottom-0 right-0 w-8 h-8 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
+              {{ user.username[0]|upper }}
+            </span>
+          </div>
+          <p class="text-sm text-[#065758]/70">Profile picture is managed by Gravatar</p>
+        </div>
+
+        <!-- Username Field -->
+        <div>
+          <label for="{{ form.username.id }}" class="form-label">
+            <span class="flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+              </svg>
+              Username
+            </span>
+          </label>
+          {{ form.username(class="form-input w-full", placeholder="Enter your username") }}
+          {% if form.username.errors %}
+            <div class="text-red-500 text-sm mt-1">
+              {% for error in form.username.errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Email Field -->
+        <div>
+          <label for="{{ form.email.id }}" class="form-label">
+            <span class="flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+              Email Address
+            </span>
+          </label>
+          {{ form.email(class="form-input w-full", placeholder="Enter your email address") }}
+          {% if form.email.errors %}
+            <div class="text-red-500 text-sm mt-1">
+              {% for error in form.email.errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Location Field -->
+        <div>
+          <label for="{{ form.location.id }}" class="form-label">
+            <span class="flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z"/>
+              </svg>
+              Location
+            </span>
+          </label>
+          {{ form.location(class="form-input w-full", placeholder="Enter your location (optional)") }}
+          {% if form.location.errors %}
+            <div class="text-red-500 text-sm mt-1">
+              {% for error in form.location.errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Bio Field -->
+        <div>
+          <label for="{{ form.bio.id }}" class="form-label">
+            <span class="flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+              </svg>
+              Bio
+            </span>
+          </label>
+          {{ form.bio(class="form-input w-full h-32 resize-none", placeholder="Tell us about yourself (optional)") }}
+          {% if form.bio.errors %}
+            <div class="text-red-500 text-sm mt-1">
+              {% for error in form.bio.errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex flex-col sm:flex-row gap-4 pt-6">
+          {{ form.submit(class="btn-primary px-8 py-3 rounded-xl text-white font-bold flex-1") }}
+          <a href="{{ url_for('profile') }}" class="bg-white border border-[#065758]/30 px-8 py-3 rounded-xl text-[#065758] font-bold hover:bg-[#065758]/5 transition-all duration-300 text-center">
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mt-6 space-y-2">
+          {% for category, message in messages %}
+            <div class="p-4 rounded-xl {% if category == 'error' %}bg-red-500/20 border border-red-500/30 text-red-100{% elif category == 'success' %}bg-green-500/20 border border-green-500/30 text-green-100{% else %}bg-blue-500/20 border border-blue-500/30 text-blue-100{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- Enhanced animated background shapes -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute left-10 top-20 w-80 h-80 bg-gradient-to-r from-[#00ffff] to-[#0a7a7b] rounded-full opacity-40 blur-3xl animate-float"></div>
+    <div class="absolute right-10 bottom-20 w-96 h-96 bg-gradient-to-l from-[#0c8a8b] to-[#00ffff] rounded-full opacity-35 blur-3xl animate-float" style="animation-delay: 1s;"></div>
+    <div class="absolute left-1/2 top-1/2 w-72 h-72 bg-gradient-to-br from-[#00ffff] to-[#0d9a9b] rounded-full opacity-30 blur-3xl animate-pulse-slow"></div>
+    <div class="absolute left-1/4 bottom-1/4 w-64 h-64 bg-gradient-to-tr from-[#0a7a7b] to-[#00ffff] rounded-full opacity-25 blur-3xl animate-float" style="animation-delay: 2s;"></div>
+  </div>
+</body>
+</html>

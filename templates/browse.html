@@ -1,132 +1,203 @@
-{% extends "base.html" %}
-
-{% block title %}Browse Skills - SkillVerse{% endblock %}
-
-{% block content %}
-<div class="max-w-7xl mx-auto px-6 py-8">
-    <!-- Header -->
-    <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold gradient-text mb-4">Browse Skills</h1>
-        <p class="text-lg text-[#065758]/80 max-w-2xl mx-auto">
-            Discover amazing skills from our community members. Find someone to learn from or offer your expertise in exchange.
-        </p>
-    </div>
-
-    <!-- Filter Section -->
-    <div class="glass rounded-2xl p-6 mb-8">
-        <div class="flex flex-wrap gap-4 items-center justify-center">
-            <select id="category-filter" class="px-4 py-2 rounded-lg border border-[#A9D4D6]/30 bg-white/50 text-[#065758] focus:outline-none focus:ring-2 focus:ring-[#82C3C5]">
-                <option value="">All Categories</option>
-                <option value="programming">Programming</option>
-                <option value="design">Design</option>
-                <option value="marketing">Marketing</option>
-                <option value="languages">Languages</option>
-                <option value="music">Music</option>
-                <option value="cooking">Cooking</option>
-                <option value="fitness">Fitness</option>
-                <option value="other">Other</option>
-            </select>
-            
-            <select id="level-filter" class="px-4 py-2 rounded-lg border border-[#A9D4D6]/30 bg-white/50 text-[#065758] focus:outline-none focus:ring-2 focus:ring-[#82C3C5]">
-                <option value="">All Levels</option>
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-            </select>
-            
-            <input type="text" id="search-input" placeholder="Search skills..." class="px-4 py-2 rounded-lg border border-[#A9D4D6]/30 bg-white/50 text-[#065758] focus:outline-none focus:ring-2 focus:ring-[#82C3C5] min-w-[200px]">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Skills - SkillVerse</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    * { font-family: 'Inter', sans-serif; }
+    .glass { background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); }
+    .gradient-text { background: linear-gradient(135deg, #00ffff, #0a7a7b, #0c8a8b, #00ffff); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: textGlow 3s ease-in-out infinite; }
+    @keyframes textGlow { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+    @keyframes logoSpin { 0%{transform:rotate(0deg) scale(1);filter:drop-shadow(0 0 10px rgba(0,255,255,0.5));} 50%{transform:rotate(180deg) scale(1.1);filter:drop-shadow(0 0 20px rgba(0,255,255,0.8));} 100%{transform:rotate(360deg) scale(1);filter:drop-shadow(0 0 10px rgba(0,255,255,0.5));} }
+    .animate-logo-spin { animation: logoSpin 4s ease-in-out infinite; }
+    .user-card { background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,250,255,0.9)); border: 2px solid rgba(0,255,255,0.2); backdrop-filter: blur(30px); transition: all 0.4s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+    .user-card:hover { background: linear-gradient(135deg, rgba(255,255,255,1), rgba(248,250,255,0.95)); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,255,255,0.2); border-color: rgba(0,255,255,0.3); }
+    .skill-tag { background: linear-gradient(135deg, rgba(0,255,255,0.2), rgba(10,122,123,0.2)); border: 1px solid rgba(0,255,255,0.3); color: #065758; transition: all 0.3s ease; }
+    .skill-tag:hover { background: linear-gradient(135deg, rgba(0,255,255,0.3), rgba(10,122,123,0.3)); transform: translateY(-2px); }
+    .profile-photo { background: linear-gradient(135deg, #00ffff, #0a7a7b); border: 4px solid rgba(255,255,255,0.3); }
+    .search-bar { background: rgba(255,255,255,0.9); border: 2px solid rgba(0,255,255,0.2); color: #065758; }
+    .search-bar:focus { border-color: #00ffff; box-shadow: 0 0 0 4px rgba(0,255,255,0.2); }
+    .btn-primary { background: linear-gradient(135deg, #00ffff, #0a7a7b); box-shadow: 0 8px 25px rgba(0, 255, 255, 0.4); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .btn-primary:hover { background: linear-gradient(135deg, #0a7a7b, #0c8a8b); box-shadow: 0 12px 35px rgba(0, 255, 255, 0.5); transform: translateY(-2px); }
+    .btn-secondary { background: linear-gradient(135deg, #f5576c, #f093fb); box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .btn-secondary:hover { background: linear-gradient(135deg, #f5576c, #f093fb); box-shadow: 0 12px 35px rgba(245, 87, 108, 0.5); transform: translateY(-2px); }
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+    .animate-float { animation: float 6s ease-in-out infinite; }
+    @keyframes pulse-slow { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.05); } }
+    .animate-pulse-slow { animation: pulse-slow 4s ease-in-out infinite; }
+    @keyframes slideInLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+    .animate-slide-in-left { animation: slideInLeft 0.8s ease-out; }
+    .animate-slide-in-right { animation: slideInRight 0.8s ease-out; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-[#065758] via-[#0a7a7b]/50 to-[#0c8a8b]/40 text-white overflow-x-hidden min-h-screen">
+  <!-- Header -->
+  <header class="w-full glass sticky top-0 z-50 border-b border-[#0a7a7b]/30 shadow-xl">
+    <div class="max-w-7xl mx-auto flex items-center justify-between py-6 px-6">
+      <div class="flex items-center gap-3 animate-slide-in-left">
+        <div class="relative">
+          <svg width="44" height="44" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-logo-spin">
+            <circle cx="16" cy="16" r="16" fill="url(#gradient1)"/>
+            <path d="M10 18c2-4 10-4 12 0" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="12.5" cy="13.5" r="1.5" fill="white"/>
+            <circle cx="19.5" cy="13.5" r="1.5" fill="white"/>
+            <defs>
+              <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00ffff"/>
+                <stop offset="50%" style="stop-color:#0a7a7b"/>
+                <stop offset="100%" style="stop-color:#0c8a8b"/>
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
+        <span class="text-3xl font-black tracking-tight gradient-text">SkillVerse</span>
+      </div>
+      <nav class="hidden md:flex gap-8 items-center text-base font-semibold animate-slide-in-right">
+        <a href="{{ url_for('dashboard') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">Dashboard</a>
+        <a href="{{ url_for('browse') }}" class="text-[#00ffff] font-bold transition-all duration-300 hover:scale-105 relative group">Browse Skills</a>
+        <a href="{{ url_for('my_swaps') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">My Swaps</a>
+        <a href="{{ url_for('requests') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">Requests</a>
+      </nav>
+      <div class="flex items-center gap-4">
+        {% if current_user.is_authenticated %}
+          <div class="profile-photo w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg">
+            {{ current_user.username[0]|upper }}
+          </div>
+          <a href="{{ url_for('logout') }}" class="btn-secondary px-6 py-2 rounded-full text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform">Logout</a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">Login</a>
+          <a href="{{ url_for('signup') }}" class="btn-primary px-6 py-2 rounded-full text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform">Sign Up</a>
+        {% endif %}
+      </div>
     </div>
-
-    <!-- Skills Grid -->
-    {% if skills %}
-        <div id="skills-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for skill in skills %}
-            <div class="skill-card bg-white/50 rounded-2xl p-6 border border-[#A9D4D6]/30 hover:shadow-xl transition-all duration-300" 
-                 data-category="{{ skill.category }}" 
-                 data-level="{{ skill.level }}"
-                 data-name="{{ skill.name|lower }}"
-                 data-description="{{ skill.description|lower }}">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="flex-1">
-                        <h3 class="text-xl font-bold text-[#065758] mb-2">{{ skill.name }}</h3>
-                        <p class="text-[#065758]/70 text-sm mb-4">{{ skill.description }}</p>
-                    </div>
-                </div>
-                
-                <div class="flex flex-wrap gap-2 mb-4">
-                    <span class="px-3 py-1 bg-[#A9D4D6]/20 text-[#065758] text-sm rounded-full font-medium">
-                        {{ skill.category|title }}
-                    </span>
-                    <span class="px-3 py-1 bg-[#82C3C5]/20 text-[#065758] text-sm rounded-full font-medium">
-                        {{ skill.level|title }}
-                    </span>
-                </div>
-                
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 bg-gradient-to-r from-[#A9D4D6] to-[#82C3C5] rounded-full flex items-center justify-center">
-                            <span class="text-white font-bold text-sm">{{ skill.user.username[0]|upper }}</span>
-                        </div>
-                        <span class="text-sm text-[#065758]/70">{{ skill.user.username }}</span>
-                    </div>
-                    <span class="text-xs text-[#065758]/60">
-                        {{ skill.created_at.strftime('%b %d, %Y') }}
-                    </span>
-                </div>
-                
-                {% if current_user.is_authenticated and current_user.id != skill.user_id %}
-                <div class="mt-4 pt-4 border-t border-[#A9D4D6]/20">
-                    <a href="{{ url_for('create_request') }}?skill_wanted={{ skill.name }}" 
-                       class="btn-primary w-full text-center py-2 rounded-lg text-white font-semibold hover:shadow-lg transition-all">
-                        Request This Skill
-                    </a>
-                </div>
-                {% endif %}
+  </header>
+  
+  <div class="max-w-7xl mx-auto px-6 py-10">
+    <h1 class="text-4xl font-black mb-8 gradient-text">Browse Skills & Users</h1>
+    
+    <!-- Search & Filter -->
+    <div class="flex flex-col md:flex-row gap-4 mb-8">
+      <input type="text" id="search-input" class="search-bar w-full md:w-1/2 px-5 py-4 rounded-xl focus:outline-none text-lg" placeholder="Search by skill, user, or location...">
+      <select id="category-filter" class="search-bar w-full md:w-1/4 px-5 py-4 rounded-xl focus:outline-none text-lg">
+        <option value="">Filter by Skill Offered</option>
+        <option value="programming">Programming</option>
+        <option value="design">Design</option>
+        <option value="marketing">Marketing</option>
+        <option value="languages">Languages</option>
+        <option value="music">Music</option>
+        <option value="cooking">Cooking</option>
+        <option value="fitness">Fitness</option>
+        <option value="other">Other</option>
+      </select>
+      <select id="level-filter" class="search-bar w-full md:w-1/4 px-5 py-4 rounded-xl focus:outline-none text-lg">
+        <option value="">Filter by Level</option>
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+    </div>
+    
+    <!-- User List -->
+    <div id="skills-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% if skills %}
+        {% for skill in skills %}
+          <div class="user-card rounded-2xl p-6 skill-card" 
+               data-category="{{ skill.category }}" 
+               data-level="{{ skill.level }}"
+               data-name="{{ skill.name|lower }}"
+               data-description="{{ skill.description|lower }}"
+               data-user="{{ skill.user.username|lower }}">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="profile-photo w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-2xl">
+                {{ skill.user.username[0]|upper }}
+              </div>
+              <div>
+                <h2 class="text-xl font-black text-[#065758]">{{ skill.user.username }}</h2>
+                <p class="text-[#065758]/70">{{ skill.user.location if skill.user.location else "Location not specified" }}</p>
+              </div>
             </div>
-            {% endfor %}
-        </div>
-        
-        <!-- No Results Message -->
-        <div id="no-results" class="hidden text-center py-12">
-            <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
-            <h3 class="text-xl font-semibold text-[#065758] mb-2">No skills found</h3>
-            <p class="text-[#065758]/70">Try adjusting your filters or search terms.</p>
-        </div>
-    {% else %}
+            <div class="mb-2">
+              <span class="text-[#065758]/70 text-sm">Skills Offered:</span>
+              <div class="flex flex-wrap gap-2 mt-1">
+                <span class="skill-tag px-3 py-1 rounded text-sm font-medium">{{ skill.name }}</span>
+                {% if skill.category %}
+                  <span class="skill-tag px-3 py-1 rounded text-sm font-medium">{{ skill.category|title }}</span>
+                {% endif %}
+              </div>
+            </div>
+            <div class="mb-2">
+              <span class="text-[#065758]/70 text-sm">Skill Level:</span>
+              <div class="flex flex-wrap gap-2 mt-1">
+                <span class="skill-tag px-3 py-1 rounded text-sm font-medium">{{ skill.level|title }}</span>
+              </div>
+            </div>
+            <div class="mb-4">
+              <p class="text-[#065758]/80 text-sm">{{ skill.description[:100] }}{% if skill.description|length > 100 %}...{% endif %}</p>
+            </div>
+            <div class="flex items-center justify-between mt-4">
+              <span class="bg-gradient-to-r from-[#10b981] to-[#059669] text-white px-3 py-1 rounded-full text-xs font-bold">Public</span>
+              {% if current_user.is_authenticated and current_user.id != skill.user_id %}
+                <a href="{{ url_for('create_request') }}?skill_wanted={{ skill.name }}" class="btn-primary px-5 py-2 rounded-lg text-white font-bold text-sm">Request Swap</a>
+              {% else %}
+                <a href="{{ url_for('profile') }}" class="btn-primary px-5 py-2 rounded-lg text-white font-bold text-sm">View Profile</a>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
         <!-- Empty State -->
-        <div class="text-center py-12">
-            <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-            </svg>
-            <h3 class="text-xl font-semibold text-[#065758] mb-2">No skills available yet</h3>
-            <p class="text-[#065758]/70 mb-6">Be the first to add your skills to the community!</p>
-            {% if current_user.is_authenticated %}
-                <a href="{{ url_for('add_skill') }}" class="btn-primary px-6 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all">
-                    Add Your First Skill
-                </a>
-            {% else %}
-                <a href="{{ url_for('signup') }}" class="btn-primary px-6 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all">
-                    Join SkillVerse
-                </a>
-            {% endif %}
+        <div class="col-span-full text-center py-12">
+          <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+          </svg>
+          <h3 class="text-xl font-semibold text-white mb-2">No skills available yet</h3>
+          <p class="text-white/70 mb-6">Be the first to add your skills to the community!</p>
+          {% if current_user.is_authenticated %}
+            <a href="{{ url_for('add_skill') }}" class="btn-primary px-6 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all">
+              Add Your First Skill
+            </a>
+          {% else %}
+            <a href="{{ url_for('signup') }}" class="btn-primary px-6 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all">
+              Join SkillVerse
+            </a>
+          {% endif %}
         </div>
-    {% endif %}
-</div>
+      {% endif %}
+    </div>
+    
+    <!-- No Results Message -->
+    <div id="no-results" class="hidden text-center py-12">
+      <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+      <h3 class="text-xl font-semibold text-white mb-2">No skills found</h3>
+      <p class="text-white/70">Try adjusting your filters or search terms.</p>
+    </div>
+  </div>
+  
+  <!-- Animated background shapes -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute left-10 top-20 w-80 h-80 bg-gradient-to-r from-[#00ffff] to-[#0a7a7b] rounded-full opacity-40 blur-3xl animate-float"></div>
+    <div class="absolute right-10 bottom-20 w-96 h-96 bg-gradient-to-l from-[#0c8a8b] to-[#00ffff] rounded-full opacity-35 blur-3xl animate-float" style="animation-delay: 1s;"></div>
+    <div class="absolute left-1/2 top-1/2 w-72 h-72 bg-gradient-to-br from-[#00ffff] to-[#0d9a9b] rounded-full opacity-30 blur-3xl animate-pulse-slow"></div>
+    <div class="absolute left-1/4 bottom-1/4 w-64 h-64 bg-gradient-to-tr from-[#0a7a7b] to-[#00ffff] rounded-full opacity-25 blur-3xl animate-float" style="animation-delay: 2s;"></div>
+  </div>
 
-<script>
-// Filter functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const categoryFilter = document.getElementById('category-filter');
-    const levelFilter = document.getElementById('level-filter');
-    const searchInput = document.getElementById('search-input');
-    const skillsGrid = document.getElementById('skills-grid');
-    const noResults = document.getElementById('no-results');
-    const skillCards = document.querySelectorAll('.skill-card');
+  <script>
+    // Filter functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const categoryFilter = document.getElementById('category-filter');
+      const levelFilter = document.getElementById('level-filter');
+      const searchInput = document.getElementById('search-input');
+      const skillsGrid = document.getElementById('skills-grid');
+      const noResults = document.getElementById('no-results');
+      const skillCards = document.querySelectorAll('.skill-card');
 
-    function filterSkills() {
+      function filterSkills() {
         const category = categoryFilter.value.toLowerCase();
         const level = levelFilter.value.toLowerCase();
         const search = searchInput.value.toLowerCase();
@@ -134,37 +205,42 @@ document.addEventListener('DOMContentLoaded', function() {
         let visibleCount = 0;
         
         skillCards.forEach(card => {
-            const cardCategory = card.dataset.category;
-            const cardLevel = card.dataset.level;
-            const cardName = card.dataset.name;
-            const cardDescription = card.dataset.description;
-            
-            const categoryMatch = !category || cardCategory === category;
-            const levelMatch = !level || cardLevel === level;
-            const searchMatch = !search || cardName.includes(search) || cardDescription.includes(search);
-            
-            if (categoryMatch && levelMatch && searchMatch) {
-                card.style.display = 'block';
-                visibleCount++;
-            } else {
-                card.style.display = 'none';
-            }
+          const cardCategory = card.dataset.category;
+          const cardLevel = card.dataset.level;
+          const cardName = card.dataset.name;
+          const cardDescription = card.dataset.description;
+          const cardUser = card.dataset.user;
+          
+          const categoryMatch = !category || cardCategory === category;
+          const levelMatch = !level || cardLevel === level;
+          const searchMatch = !search || 
+            cardName.includes(search) || 
+            cardDescription.includes(search) || 
+            cardUser.includes(search);
+          
+          if (categoryMatch && levelMatch && searchMatch) {
+            card.style.display = 'block';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
         });
         
         // Show/hide no results message
         if (visibleCount === 0) {
-            skillsGrid.style.display = 'none';
-            noResults.classList.remove('hidden');
+          skillsGrid.style.display = 'none';
+          noResults.classList.remove('hidden');
         } else {
-            skillsGrid.style.display = 'grid';
-            noResults.classList.add('hidden');
+          skillsGrid.style.display = 'grid';
+          noResults.classList.add('hidden');
         }
-    }
+      }
 
-    // Add event listeners
-    categoryFilter.addEventListener('change', filterSkills);
-    levelFilter.addEventListener('change', filterSkills);
-    searchInput.addEventListener('input', filterSkills);
-});
-</script>
-{% endblock %}
+      // Add event listeners
+      if (categoryFilter) categoryFilter.addEventListener('change', filterSkills);
+      if (levelFilter) levelFilter.addEventListener('change', filterSkills);
+      if (searchInput) searchInput.addEventListener('input', filterSkills);
+    });
+  </script>
+</body>
+</html>

@@ -1,193 +1,603 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillVerse Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    /* Glassmorphism effect */
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Gradient text animation */
+    .gradient-text {
+      background: linear-gradient(135deg, #00ffff, #0a7a7b, #0c8a8b, #00ffff);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: textGlow 3s ease-in-out infinite;
+    }
+    
+    @keyframes textGlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    /* Logo spin animation */
+    @keyframes logoSpin {
+      0% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5)); }
+      50% { transform: rotate(180deg) scale(1.1); filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.8)); }
+      100% { transform: rotate(360deg) scale(1); filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5)); }
+    }
+    
+    .animate-logo-spin {
+      animation: logoSpin 4s ease-in-out infinite;
+    }
+    
+    /* Slide in animations */
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .animate-slide-in-left {
+      animation: slideInLeft 0.8s ease-out;
+    }
+    
+    .animate-slide-in-right {
+      animation: slideInRight 0.8s ease-out;
+    }
+    
+    .animate-slide-in-up {
+      animation: slideInUp 0.8s ease-out;
+    }
+    
+    /* Floating animation */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    /* Pulse animation */
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.05); }
+    }
+    
+    .animate-pulse-slow {
+      animation: pulse-slow 4s ease-in-out infinite;
+    }
+    
+    /* Button styles */
+    .btn-primary {
+      background: linear-gradient(135deg, #00ffff, #0a7a7b);
+      box-shadow: 0 8px 25px rgba(0, 255, 255, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0a7a7b, #0c8a8b);
+      box-shadow: 0 12px 35px rgba(0, 255, 255, 0.5);
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #f5576c, #f093fb);
+      box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #f5576c, #f093fb);
+      box-shadow: 0 12px 35px rgba(245, 87, 108, 0.5);
+      transform: translateY(-2px);
+    }
+    
+    /* Card enhancements */
+    .dashboard-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 255, 0.9));
+      border: 2px solid rgba(0, 255, 255, 0.2);
+      backdrop-filter: blur(30px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+    
+    .dashboard-card:hover {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(248, 250, 255, 0.95));
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+      border-color: rgba(0, 255, 255, 0.3);
+    }
+    
+    /* Status badges */
+    .status-pending {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: white;
+    }
+    
+    .status-accepted {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+    }
+    
+    .status-completed {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+    }
+    
+    .status-rejected {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+    }
+    
+    /* Skill tags */
+    .skill-tag {
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(10, 122, 123, 0.2));
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      color: #065758;
+      transition: all 0.3s ease;
+    }
+    
+    .skill-tag:hover {
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(10, 122, 123, 0.3));
+      transform: translateY(-2px);
+    }
+    
+    /* Profile photo */
+    .profile-photo {
+      background: linear-gradient(135deg, #00ffff, #0a7a7b);
+      border: 4px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Rating stars */
+    .star-filled {
+      color: #fbbf24;
+    }
+    
+    .star-empty {
+      color: #d1d5db;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-[#065758] via-[#0a7a7b]/50 to-[#0c8a8b]/40 text-white overflow-x-hidden min-h-screen">
+  <!-- Enhanced Header -->
+  <header class="w-full glass sticky top-0 z-50 border-b border-[#0a7a7b]/30 shadow-xl">
+    <div class="max-w-7xl mx-auto flex items-center justify-between py-6 px-6">
+      <div class="flex items-center gap-3 animate-slide-in-left">
+        <!-- Enhanced Logo -->
+        <div class="relative">
+          <svg width="44" height="44" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-logo-spin">
+            <circle cx="16" cy="16" r="16" fill="url(#gradient1)"/>
+            <path d="M10 18c2-4 10-4 12 0" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="12.5" cy="13.5" r="1.5" fill="white"/>
+            <circle cx="19.5" cy="13.5" r="1.5" fill="white"/>
+            <defs>
+              <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00ffff"/>
+                <stop offset="50%" style="stop-color:#0a7a7b"/>
+                <stop offset="100%" style="stop-color:#0c8a8b"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="text-3xl font-black tracking-tight gradient-text">SkillVerse</span>
+      </div>
+      
+      <!-- Navigation Menu -->
+      <nav class="hidden md:flex items-center gap-6 animate-slide-in-right">
+        <a href="{{ url_for('dashboard') }}" class="text-white hover:text-[#00ffff] font-semibold transition-colors">Dashboard</a>
+        <a href="{{ url_for('browse') }}" class="text-white/70 hover:text-[#00ffff] font-semibold transition-colors">Browse</a>
+        <a href="{{ url_for('requests') }}" class="text-white/70 hover:text-[#00ffff] font-semibold transition-colors">Requests</a>
+        <a href="{{ url_for('my_swaps') }}" class="text-white/70 hover:text-[#00ffff] font-semibold transition-colors">My Swaps</a>
+      </nav>
+      
+      <!-- User Menu -->
+      <div class="flex items-center gap-6 animate-slide-in-right">
+        <div class="flex items-center gap-3">
+          <div class="profile-photo w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg">
+            {{ user.username[:2].upper() if user.username else 'U' }}
+          </div>
+          <div class="hidden md:block">
+            <p class="font-semibold">{{ user.username }}</p>
+            <p class="text-sm text-white/70">Online</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="{{ url_for('profile') }}" class="text-white/70 hover:text-[#00ffff] font-semibold transition-colors">Profile</a>
+          <a href="{{ url_for('settings') }}" class="text-white/70 hover:text-[#00ffff] font-semibold transition-colors">Settings</a>
+          <a href="{{ url_for('logout') }}" class="btn-secondary px-6 py-2 rounded-full text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform">
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
 
-{% block title %}Dashboard - SkillVerse{% endblock %}
-
-{% block content %}
-<div class="max-w-7xl mx-auto px-6 py-8">
+  <!-- Dashboard Content -->
+  <div class="max-w-7xl mx-auto px-6 py-8">
     <!-- Welcome Section -->
-    <div class="glass rounded-2xl p-8 mb-8">
+    <div class="mb-8 animate-slide-in-up">
+      <h1 class="text-4xl md:text-5xl font-black mb-4">
+        Welcome back, <span class="gradient-text">{{ user.username }}!</span>
+      </h1>
+      <p class="text-xl text-white/85">Here's what's happening with your skill swaps today.</p>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="dashboard-card rounded-2xl p-6 animate-slide-in-up" style="animation-delay: 0.1s;">
         <div class="flex items-center justify-between">
+          <div>
+            <p class="text-[#065758]/70 font-medium">Pending Requests</p>
+            <p class="text-3xl font-black text-[#065758]">{{ pending_count }}</p>
+          </div>
+          <div class="w-12 h-12 bg-gradient-to-r from-[#fbbf24] to-[#f59e0b] rounded-full flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-card rounded-2xl p-6 animate-slide-in-up" style="animation-delay: 0.2s;">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-[#065758]/70 font-medium">Active Swaps</p>
+            <p class="text-3xl font-black text-[#065758]">{{ active_count }}</p>
+          </div>
+          <div class="w-12 h-12 bg-gradient-to-r from-[#10b981] to-[#059669] rounded-full flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-card rounded-2xl p-6 animate-slide-in-up" style="animation-delay: 0.3s;">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-[#065758]/70 font-medium">Skills Offered</p>
+            <p class="text-3xl font-black text-[#065758]">{{ skills_count }}</p>
+          </div>
+          <div class="w-12 h-12 bg-gradient-to-r from-[#3b82f6] to-[#2563eb] rounded-full flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-card rounded-2xl p-6 animate-slide-in-up" style="animation-delay: 0.4s;">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-[#065758]/70 font-medium">Rating</p>
+            <p class="text-3xl font-black text-[#065758]">{{ "%.1f"|format(avg_rating) }}</p>
+          </div>
+          <div class="w-12 h-12 bg-gradient-to-r from-[#f093fb] to-[#f5576c] rounded-full flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Left Column - Profile & Skills -->
+      <div class="lg:col-span-1 space-y-6">
+        <!-- Profile Card -->
+        <div class="dashboard-card rounded-2xl p-6 animate-slide-in-left">
+          <div class="text-center mb-6">
+            <div class="profile-photo w-24 h-24 rounded-full flex items-center justify-center text-white font-bold text-3xl mx-auto mb-4">
+              {{ user.username[:2].upper() if user.username else 'U' }}
+            </div>
+            <h3 class="text-2xl font-black text-[#065758] mb-2">{{ user.username }}</h3>
+            <p class="text-[#065758]/70 mb-1">{{ user.email }}</p>
+            {% if user.location %}
+            <p class="text-[#065758]/70 mb-4">📍 {{ user.location }}</p>
+            {% endif %}
+            <div class="flex items-center justify-center gap-2 mb-4">
+              <span class="status-accepted px-3 py-1 rounded-full text-xs font-bold">{{ user.profile_visibility|title }} Profile</span>
+            </div>
+          </div>
+          
+          <div class="space-y-4">
+            {% if user.bio %}
             <div>
-                <h1 class="text-4xl font-bold gradient-text mb-2">Welcome back, {{ user.username }}!</h1>
-                <p class="text-lg text-[#065758]/80">Ready to swap some skills today?</p>
+              <h4 class="font-bold text-[#065758] mb-2">Bio</h4>
+              <p class="text-[#065758]/70">{{ user.bio }}</p>
             </div>
-            <div class="flex gap-4">
-                <a href="{{ url_for('add_skill') }}" class="btn-primary px-6 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all">
-                    Add Skill
-                </a>
-                <a href="{{ url_for('create_request') }}" class="bg-gradient-to-r from-[#c46960] to-[#d17a72] px-6 py-3 rounded-full text-white font-semibold hover:shadow-lg transition-all">
-                    Create Request
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Your Skills Section -->
-        <div class="glass rounded-2xl p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl font-bold text-[#065758]">Your Skills</h2>
-                <a href="{{ url_for('add_skill') }}" class="text-[#82C3C5] hover:text-[#065758] transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                </a>
+            {% endif %}
+            
+            <div>
+              <h4 class="font-bold text-[#065758] mb-2">Member Since</h4>
+              <p class="text-[#065758]/70">{{ user.created_at.strftime('%B %Y') if user.created_at else 'Recently' }}</p>
             </div>
             
-            {% if skills %}
-                <div class="space-y-4">
-                    {% for skill in skills %}
-                    <div class="bg-white/50 rounded-lg p-4 border border-[#A9D4D6]/30">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h3 class="font-semibold text-[#065758]">{{ skill.name }}</h3>
-                                <p class="text-sm text-[#065758]/70">{{ skill.description[:100] }}{% if skill.description|length > 100 %}...{% endif %}</p>
-                                <div class="flex gap-2 mt-2">
-                                    <span class="px-2 py-1 bg-[#A9D4D6]/20 text-[#065758] text-xs rounded-full">{{ skill.category|title }}</span>
-                                    <span class="px-2 py-1 bg-[#82C3C5]/20 text-[#065758] text-xs rounded-full">{{ skill.level|title }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="text-center py-8">
-                    <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-                    </svg>
-                    <p class="text-[#065758]/70 mb-4">You haven't added any skills yet.</p>
-                    <a href="{{ url_for('add_skill') }}" class="btn-primary px-6 py-2 rounded-full text-white font-semibold">
-                        Add Your First Skill
-                    </a>
-                </div>
-            {% endif %}
-        </div>
-
-        <!-- Recent Open Requests -->
-        <div class="glass rounded-2xl p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl font-bold text-[#065758]">Recent Requests</h2>
-                <a href="{{ url_for('requests') }}" class="text-[#82C3C5] hover:text-[#065758] transition-colors text-sm">
-                    View All
-                </a>
-            </div>
-            
-            {% if open_requests %}
-                <div class="space-y-4">
-                    {% for request in open_requests %}
-                    <div class="bg-white/50 rounded-lg p-4 border border-[#A9D4D6]/30">
-                        <h3 class="font-semibold text-[#065758] mb-2">{{ request.title }}</h3>
-                        <p class="text-sm text-[#065758]/70 mb-3">{{ request.description[:100] }}{% if request.description|length > 100 %}...{% endif %}</p>
-                        <div class="flex gap-2 mb-3">
-                            <span class="px-2 py-1 bg-[#c46960]/20 text-[#065758] text-xs rounded-full">
-                                Wants: {{ request.skill_wanted }}
-                            </span>
-                            <span class="px-2 py-1 bg-[#82C3C5]/20 text-[#065758] text-xs rounded-full">
-                                Offers: {{ request.skill_offered }}
-                            </span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs text-[#065758]/60">
-                                {{ request.created_at.strftime('%b %d, %Y') }}
-                            </span>
-                            <form method="POST" action="{{ url_for('accept_request', request_id=request.id) }}" class="inline">
-                                <button type="submit" class="bg-[#82C3C5] hover:bg-[#A9D4D6] text-white px-3 py-1 rounded-full text-xs font-medium transition-colors">
-                                    Accept
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="text-center py-8">
-                    <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                    </svg>
-                    <p class="text-[#065758]/70">No open requests at the moment.</p>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Your Requests Section -->
-    <div class="glass rounded-2xl p-6 mt-8">
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold text-[#065758]">Your Requests</h2>
-            <a href="{{ url_for('create_request') }}" class="btn-primary px-6 py-2 rounded-full text-white font-semibold">
-                Create New Request
+            <a href="{{ url_for('edit_profile') }}" class="btn-primary w-full py-3 rounded-xl text-white font-bold block text-center">
+              Edit Profile
             </a>
+          </div>
         </div>
-        
-        {% if user_requests %}
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead>
-                        <tr class="border-b border-[#A9D4D6]/30">
-                            <th class="text-left py-3 px-4 text-[#065758] font-semibold">Title</th>
-                            <th class="text-left py-3 px-4 text-[#065758] font-semibold">Skills</th>
-                            <th class="text-left py-3 px-4 text-[#065758] font-semibold">Status</th>
-                            <th class="text-left py-3 px-4 text-[#065758] font-semibold">Created</th>
-                            <th class="text-left py-3 px-4 text-[#065758] font-semibold">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for request in user_requests %}
-                        <tr class="border-b border-[#A9D4D6]/20">
-                            <td class="py-3 px-4">
-                                <div>
-                                    <h3 class="font-semibold text-[#065758]">{{ request.title }}</h3>
-                                    <p class="text-sm text-[#065758]/70">{{ request.description[:50] }}{% if request.description|length > 50 %}...{% endif %}</p>
-                                </div>
-                            </td>
-                            <td class="py-3 px-4">
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs bg-[#c46960]/20 text-[#065758] px-2 py-1 rounded-full w-fit">
-                                        Wants: {{ request.skill_wanted }}
-                                    </span>
-                                    <span class="text-xs bg-[#82C3C5]/20 text-[#065758] px-2 py-1 rounded-full w-fit">
-                                        Offers: {{ request.skill_offered }}
-                                    </span>
-                                </div>
-                            </td>
-                            <td class="py-3 px-4">
-                                <span class="px-2 py-1 rounded-full text-xs font-medium
-                                    {% if request.status == 'open' %}bg-green-100 text-green-800
-                                    {% elif request.status == 'accepted' %}bg-blue-100 text-blue-800
-                                    {% elif request.status == 'completed' %}bg-gray-100 text-gray-800
-                                    {% else %}bg-red-100 text-red-800{% endif %}">
-                                    {{ request.status|title }}
-                                </span>
-                            </td>
-                            <td class="py-3 px-4 text-sm text-[#065758]/70">
-                                {{ request.created_at.strftime('%b %d, %Y') }}
-                            </td>
-                            <td class="py-3 px-4">
-                                {% if request.status == 'accepted' %}
-                                    <form method="POST" action="{{ url_for('complete_swap', request_id=request.id) }}" class="inline">
-                                        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium transition-colors">
-                                            Complete
-                                        </button>
-                                    </form>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <div class="text-center py-8">
-                <svg class="w-16 h-16 mx-auto text-[#A9D4D6]/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                </svg>
-                <p class="text-[#065758]/70 mb-4">You haven't created any requests yet.</p>
-                <a href="{{ url_for('create_request') }}" class="btn-primary px-6 py-2 rounded-full text-white font-semibold">
-                    Create Your First Request
-                </a>
-            </div>
-        {% endif %}
+
+        <!-- Skills Offered -->
+        <div class="dashboard-card rounded-2xl p-6 animate-slide-in-left" style="animation-delay: 0.2s;">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-black text-[#065758]">Skills Offered</h3>
+            <a href="{{ url_for('add_skill') }}" class="text-[#00ffff] hover:text-[#0a7a7b] font-semibold">+ Add</a>
+          </div>
+          
+          <div class="space-y-3">
+            {% if skills %}
+              {% for skill in skills %}
+              <div class="skill-tag px-3 py-2 rounded-lg flex items-center justify-between">
+                <div>
+                  <span class="font-medium">{{ skill.name }}</span>
+                  <span class="text-xs text-[#065758]/60 ml-2">({{ skill.level|title }})</span>
+                </div>
+                <button class="text-[#065758]/50 hover:text-[#065758]">×</button>
+              </div>
+              {% endfor %}
+            {% else %}
+              <p class="text-[#065758]/60 text-center py-4">No skills added yet</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="dashboard-card rounded-2xl p-6 animate-slide-in-left" style="animation-delay: 0.3s;">
+          <h3 class="text-xl font-black text-[#065758] mb-4">Quick Actions</h3>
+          
+          <div class="space-y-3">
+            <a href="{{ url_for('add_skill') }}" class="btn-primary w-full py-3 rounded-xl text-white font-bold text-center block">
+              Add New Skill
+            </a>
+            <a href="{{ url_for('create_request') }}" class="btn-secondary w-full py-3 rounded-xl text-white font-bold text-center block">
+              Create Swap Request
+            </a>
+            <a href="{{ url_for('browse') }}" class="bg-white border border-[#065758]/30 w-full py-3 rounded-xl text-[#065758] font-bold text-center block hover:bg-[#065758]/5 transition-all duration-300">
+              Browse Skills
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Swap Requests & Activity -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- Pending Swap Requests -->
+        <div class="dashboard-card rounded-2xl p-6 animate-slide-in-right">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-black text-[#065758]">Pending Swap Requests</h3>
+            <span class="status-pending px-3 py-1 rounded-full text-sm font-bold">{{ pending_count }} New</span>
+          </div>
+          
+          <div class="space-y-4">
+            {% if pending_requests %}
+              {% for request in pending_requests[:5] %}
+                {% if request.requester_id != user.id %}
+                <div class="border border-[#065758]/20 rounded-xl p-4 hover:bg-[#065758]/5 transition-all duration-300">
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 bg-gradient-to-r from-[#f093fb] to-[#f5576c] rounded-full flex items-center justify-center text-white font-bold">
+                        {{ request.requester.username[:2].upper() if request.requester else 'U' }}
+                      </div>
+                      <div>
+                        <h4 class="font-bold text-[#065758]">{{ request.requester.username if request.requester else 'Unknown User' }}</h4>
+                        <p class="text-sm text-[#065758]/70">{{ request.created_at.strftime('%B %d, %Y') if request.created_at else 'Recently' }}</p>
+                      </div>
+                    </div>
+                    <span class="status-pending px-2 py-1 rounded-full text-xs font-bold">Pending</span>
+                  </div>
+                  
+                  <div class="flex items-center gap-4 mb-4">
+                    <div class="flex-1">
+                      <p class="text-sm text-[#065758]/70 mb-1">Offering:</p>
+                      <span class="skill-tag px-2 py-1 rounded text-sm font-medium">{{ request.skill_offered }}</span>
+                    </div>
+                    <svg class="w-6 h-6 text-[#065758]/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                    </svg>
+                    <div class="flex-1">
+                      <p class="text-sm text-[#065758]/70 mb-1">Wanting:</p>
+                      <span class="skill-tag px-2 py-1 rounded text-sm font-medium">{{ request.skill_wanted }}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="flex gap-3">
+                    <form method="POST" action="{{ url_for('accept_request', request_id=request.id) }}" class="inline">
+                      <button type="submit" class="btn-primary px-4 py-2 rounded-lg text-white font-bold text-sm">Accept</button>
+                    </form>
+                    <button class="bg-white border border-[#065758]/30 px-4 py-2 rounded-lg text-[#065758] font-bold text-sm hover:bg-[#065758]/5 transition-all duration-300">Decline</button>
+                    <button class="bg-white border border-[#065758]/30 px-4 py-2 rounded-lg text-[#065758] font-bold text-sm hover:bg-[#065758]/5 transition-all duration-300">Message</button>
+                  </div>
+                </div>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              <p class="text-[#065758]/60 text-center py-8">No pending requests at the moment</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Active Swaps -->
+        <div class="dashboard-card rounded-2xl p-6 animate-slide-in-right" style="animation-delay: 0.2s;">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-black text-[#065758]">Active Swaps</h3>
+            <span class="status-accepted px-3 py-1 rounded-full text-sm font-bold">{{ active_count }} Active</span>
+          </div>
+          
+          <div class="space-y-4">
+            {% if active_swaps %}
+              {% for swap in active_swaps[:3] %}
+              <div class="border border-[#065758]/20 rounded-xl p-4 hover:bg-[#065758]/5 transition-all duration-300">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-[#3b82f6] to-[#2563eb] rounded-full flex items-center justify-center text-white font-bold">
+                      {% if swap.requester_id == user.id %}
+                        {{ swap.offerer.username[:2].upper() if swap.offerer else 'U' }}
+                      {% else %}
+                        {{ swap.requester.username[:2].upper() if swap.requester else 'U' }}
+                      {% endif %}
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-[#065758]">
+                        {% if swap.requester_id == user.id %}
+                          {{ swap.offerer.username if swap.offerer else 'Unknown User' }}
+                        {% else %}
+                          {{ swap.requester.username if swap.requester else 'Unknown User' }}
+                        {% endif %}
+                      </h4>
+                      <p class="text-sm text-[#065758]/70">Started {{ swap.created_at.strftime('%B %d') if swap.created_at else 'Recently' }}</p>
+                    </div>
+                  </div>
+                  <span class="status-accepted px-2 py-1 rounded-full text-xs font-bold">In Progress</span>
+                </div>
+                
+                <div class="flex items-center gap-4 mb-4">
+                  <div class="flex-1">
+                    <p class="text-sm text-[#065758]/70 mb-1">
+                      {% if swap.requester_id == user.id %}
+                        You're learning:
+                      {% else %}
+                        You're teaching:
+                      {% endif %}
+                    </p>
+                    <span class="skill-tag px-2 py-1 rounded text-sm font-medium">
+                      {% if swap.requester_id == user.id %}
+                        {{ swap.skill_wanted }}
+                      {% else %}
+                        {{ swap.skill_offered }}
+                      {% endif %}
+                    </span>
+                  </div>
+                  <svg class="w-6 h-6 text-[#065758]/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                  </svg>
+                  <div class="flex-1">
+                    <p class="text-sm text-[#065758]/70 mb-1">
+                      {% if swap.requester_id == user.id %}
+                        You're teaching:
+                      {% else %}
+                        You're learning:
+                      {% endif %}
+                    </p>
+                    <span class="skill-tag px-2 py-1 rounded text-sm font-medium">
+                      {% if swap.requester_id == user.id %}
+                        {{ swap.skill_offered }}
+                      {% else %}
+                        {{ swap.skill_wanted }}
+                      {% endif %}
+                    </span>
+                  </div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-[#10b981] rounded-full"></div>
+                    <span class="text-sm text-[#065758]/70">Active swap</span>
+                  </div>
+                  <form method="POST" action="{{ url_for('complete_swap', request_id=swap.id) }}" class="inline">
+                    <button type="submit" class="btn-primary px-4 py-2 rounded-lg text-white font-bold text-sm">Complete</button>
+                  </form>
+                </div>
+              </div>
+              {% endfor %}
+            {% else %}
+              <p class="text-[#065758]/60 text-center py-8">No active swaps at the moment</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="dashboard-card rounded-2xl p-6 animate-slide-in-right" style="animation-delay: 0.3s;">
+          <h3 class="text-2xl font-black text-[#065758] mb-6">Recent Activity</h3>
+          
+          <div class="space-y-4">
+            {% if completed_swaps %}
+              {% for swap in completed_swaps[:2] %}
+              <div class="border border-[#065758]/20 rounded-xl p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-[#f093fb] to-[#f5576c] rounded-full flex items-center justify-center text-white font-bold">
+                      {% if swap.requester_id == user.id %}
+                        {{ swap.offerer.username[:2].upper() if swap.offerer else 'U' }}
+                      {% else %}
+                        {{ swap.requester.username[:2].upper() if swap.requester else 'U' }}
+                      {% endif %}
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-[#065758]">
+                        {% if swap.requester_id == user.id %}
+                          {{ swap.offerer.username if swap.offerer else 'Unknown User' }}
+                        {% else %}
+                          {{ swap.requester.username if swap.requester else 'Unknown User' }}
+                        {% endif %}
+                      </h4>
+                      <p class="text-sm text-[#065758]/70">Completed swap</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <svg class="w-5 h-5 star-filled" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <svg class="w-5 h-5 star-filled" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <svg class="w-5 h-5 star-filled" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <svg class="w-5 h-5 star-filled" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <svg class="w-5 h-5 star-filled" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                  </div>
+                </div>
+                <p class="text-[#065758]/80 italic">"Great experience! Would definitely recommend."</p>
+              </div>
+              {% endfor %}
+            {% else %}
+              <p class="text-[#065758]/60 text-center py-8">No recent activity</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
     </div>
-</div>
-{% endblock %}
+  </div>
+
+  <!-- Enhanced animated background shapes -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute left-10 top-20 w-80 h-80 bg-gradient-to-r from-[#00ffff] to-[#0a7a7b] rounded-full opacity-40 blur-3xl animate-float"></div>
+    <div class="absolute right-10 bottom-20 w-96 h-96 bg-gradient-to-l from-[#0c8a8b] to-[#00ffff] rounded-full opacity-35 blur-3xl animate-float" style="animation-delay: 1s;"></div>
+    <div class="absolute left-1/2 top-1/2 w-72 h-72 bg-gradient-to-br from-[#00ffff] to-[#0d9a9b] rounded-full opacity-30 blur-3xl animate-pulse-slow"></div>
+    <div class="absolute left-1/4 bottom-1/4 w-64 h-64 bg-gradient-to-tr from-[#0a7a7b] to-[#00ffff] rounded-full opacity-25 blur-3xl animate-float" style="animation-delay: 2s;"></div>
+  </div>
+</body>
+</html>

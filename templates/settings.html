@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - SkillVerse</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    * { font-family: 'Inter', sans-serif; }
+    .glass { background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); }
+    .gradient-text { background: linear-gradient(135deg, #00ffff, #0a7a7b, #0c8a8b, #00ffff); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: textGlow 3s ease-in-out infinite; }
+    @keyframes textGlow { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+    @keyframes logoSpin { 0%{transform:rotate(0deg) scale(1);filter:drop-shadow(0 0 10px rgba(0,255,255,0.5));} 50%{transform:rotate(180deg) scale(1.1);filter:drop-shadow(0 0 20px rgba(0,255,255,0.8));} 100%{transform:rotate(360deg) scale(1);filter:drop-shadow(0 0 10px rgba(0,255,255,0.5));} }
+    .animate-logo-spin { animation: logoSpin 4s ease-in-out infinite; }
+    .settings-card { background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,250,255,0.9)); border: 2px solid rgba(0,255,255,0.2); backdrop-filter: blur(30px); transition: all 0.4s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+    .settings-card:hover { background: linear-gradient(135deg, rgba(255,255,255,1), rgba(248,250,255,0.95)); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,255,255,0.2); border-color: rgba(0,255,255,0.3); }
+    .form-input { background: rgba(255,255,255,0.9); border: 2px solid rgba(0,255,255,0.2); border-radius: 12px; padding: 12px 16px; transition: all 0.3s ease; color: #065758; }
+    .form-input:focus { outline: none; border-color: #00ffff; box-shadow: 0 0 0 3px rgba(0,255,255,0.1); background: rgba(255,255,255,1); }
+    .form-label { color: #065758; font-weight: 600; margin-bottom: 8px; display: block; }
+    .profile-photo { background: linear-gradient(135deg, #00ffff, #0a7a7b); border: 4px solid rgba(255,255,255,0.3); }
+    .btn-primary { background: linear-gradient(135deg, #00ffff, #0a7a7b); box-shadow: 0 8px 25px rgba(0,255,255,0.4); transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
+    .btn-primary:hover { background: linear-gradient(135deg, #0a7a7b, #0c8a8b); box-shadow: 0 12px 35px rgba(0,255,255,0.5); transform: translateY(-2px); }
+    .btn-secondary { background: linear-gradient(135deg, #f5576c, #f093fb); box-shadow: 0 8px 25px rgba(240,147,251,0.4); transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
+    .btn-secondary:hover { background: linear-gradient(135deg, #f5576c, #f093fb); box-shadow: 0 12px 35px rgba(245,87,108,0.5); transform: translateY(-2px); }
+    .toggle-switch { position: relative; width: 60px; height: 30px; background: #d1d5db; border-radius: 15px; transition: all 0.3s ease; }
+    .toggle-switch.active { background: #00ffff; }
+    .toggle-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; background: white; border-radius: 50%; transition: all 0.3s ease; }
+    .toggle-switch.active::after { transform: translateX(30px); }
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+    .animate-float { animation: float 6s ease-in-out infinite; }
+    @keyframes pulse-slow { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.05); } }
+    .animate-pulse-slow { animation: pulse-slow 4s ease-in-out infinite; }
+    @keyframes slideInLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+    .animate-slide-in-left { animation: slideInLeft 0.8s ease-out; }
+    .animate-slide-in-right { animation: slideInRight 0.8s ease-out; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-[#065758] via-[#0a7a7b]/50 to-[#0c8a8b]/40 text-white overflow-x-hidden min-h-screen">
+  <!-- Header -->
+  <header class="w-full glass sticky top-0 z-50 border-b border-[#0a7a7b]/30 shadow-xl">
+    <div class="max-w-7xl mx-auto flex items-center justify-between py-6 px-6">
+      <div class="flex items-center gap-3 animate-slide-in-left">
+        <div class="relative">
+          <svg width="44" height="44" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-logo-spin">
+            <circle cx="16" cy="16" r="16" fill="url(#gradient1)"/>
+            <path d="M10 18c2-4 10-4 12 0" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="12.5" cy="13.5" r="1.5" fill="white"/>
+            <circle cx="19.5" cy="13.5" r="1.5" fill="white"/>
+            <defs>
+              <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00ffff"/>
+                <stop offset="50%" style="stop-color:#0a7a7b"/>
+                <stop offset="100%" style="stop-color:#0c8a8b"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="text-3xl font-black tracking-tight gradient-text">SkillVerse</span>
+      </div>
+      <nav class="hidden md:flex gap-8 items-center text-base font-semibold animate-slide-in-right">
+        <a href="{{ url_for('dashboard') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">Dashboard</a>
+        <a href="{{ url_for('browse') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">Browse Skills</a>
+        <a href="{{ url_for('my_swaps') }}" class="hover:text-[#0a7a7b] transition-all duration-300 hover:scale-105 relative group">My Swaps</a>
+        <a href="{{ url_for('settings') }}" class="text-[#00ffff] font-bold transition-all duration-300 hover:scale-105 relative group">Settings</a>
+      </nav>
+      <div class="flex items-center gap-4">
+        <div class="profile-photo w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg">
+          {{ user.username[0]|upper }}
+        </div>
+        <a href="{{ url_for('logout') }}" class="btn-secondary px-6 py-2 rounded-full text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform">Logout</a>
+      </div>
+    </div>
+  </header>
+  
+  <div class="max-w-4xl mx-auto px-6 py-10">
+    <h1 class="text-4xl font-black mb-8 gradient-text">Settings</h1>
+    
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mb-8 space-y-2">
+          {% for category, message in messages %}
+            <div class="p-4 rounded-xl {% if category == 'error' %}bg-red-500/20 border border-red-500/30 text-red-100{% elif category == 'success' %}bg-green-500/20 border border-green-500/30 text-green-100{% else %}bg-blue-500/20 border border-blue-500/30 text-blue-100{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    
+    <form method="POST" class="space-y-8">
+      {{ form.hidden_tag() }}
+      
+      <!-- Profile Settings -->
+      <div class="settings-card rounded-2xl p-6">
+        <h2 class="text-2xl font-black text-[#065758] mb-6">Profile Settings</h2>
+        <div class="space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-[#065758] mb-1">Profile Visibility</h3>
+              <p class="text-sm text-[#065758]/70">Make your profile visible to other users</p>
+            </div>
+            <div class="toggle-switch {% if form.profile_visibility.data == 'public' %}active{% endif %} cursor-pointer" 
+                 onclick="toggleSetting(this, '{{ form.profile_visibility.id }}')" 
+                 data-field="{{ form.profile_visibility.id }}"></div>
+            {{ form.profile_visibility(class="hidden") }}
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-[#065758] mb-1">Show Location</h3>
+              <p class="text-sm text-[#065758]/70">Display your location on your profile</p>
+            </div>
+            <div class="toggle-switch {% if form.show_location.data == 'yes' %}active{% endif %} cursor-pointer" 
+                 onclick="toggleSetting(this, '{{ form.show_location.id }}')" 
+                 data-field="{{ form.show_location.id }}"></div>
+            {{ form.show_location(class="hidden") }}
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-[#065758] mb-1">Show Email</h3>
+              <p class="text-sm text-[#065758]/70">Allow other users to see your email</p>
+            </div>
+            <div class="toggle-switch {% if form.show_email.data == 'yes' %}active{% endif %} cursor-pointer" 
+                 onclick="toggleSetting(this, '{{ form.show_email.id }}')" 
+                 data-field="{{ form.show_email.id }}"></div>
+            {{ form.show_email(class="hidden") }}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Notification Settings -->
+      <div class="settings-card rounded-2xl p-6">
+        <h2 class="text-2xl font-black text-[#065758] mb-6">Notification Settings</h2>
+        <div class="space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-[#065758] mb-1">Email Notifications</h3>
+              <p class="text-sm text-[#065758]/70">Receive notifications about swap requests</p>
+            </div>
+            <div class="toggle-switch {% if form.email_notifications.data == 'yes' %}active{% endif %} cursor-pointer" 
+                 onclick="toggleSetting(this, '{{ form.email_notifications.id }}')" 
+                 data-field="{{ form.email_notifications.id }}"></div>
+            {{ form.email_notifications(class="hidden") }}
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-[#065758] mb-1">Push Notifications</h3>
+              <p class="text-sm text-[#065758]/70">Get push notifications on your device</p>
+            </div>
+            <div class="toggle-switch {% if form.push_notifications.data == 'yes' %}active{% endif %} cursor-pointer" 
+                 onclick="toggleSetting(this, '{{ form.push_notifications.id }}')" 
+                 data-field="{{ form.push_notifications.id }}"></div>
+            {{ form.push_notifications(class="hidden") }}
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-[#065758] mb-1">New Message Alerts</h3>
+              <p class="text-sm text-[#065758]/70">Notify when you receive new messages</p>
+            </div>
+            <div class="toggle-switch {% if form.new_message_alerts.data == 'yes' %}active{% endif %} cursor-pointer" 
+                 onclick="toggleSetting(this, '{{ form.new_message_alerts.id }}')" 
+                 data-field="{{ form.new_message_alerts.id }}"></div>
+            {{ form.new_message_alerts(class="hidden") }}
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-[#065758] mb-1">Swap Request Alerts</h3>
+              <p class="text-sm text-[#065758]/70">Notify when you receive swap requests</p>
+            </div>
+            <div class="toggle-switch {% if form.swap_request_alerts.data == 'yes' %}active{% endif %} cursor-pointer" 
+                 onclick="toggleSetting(this, '{{ form.swap_request_alerts.id }}')" 
+                 data-field="{{ form.swap_request_alerts.id }}"></div>
+            {{ form.swap_request_alerts(class="hidden") }}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Account Settings -->
+      <div class="settings-card rounded-2xl p-6">
+        <h2 class="text-2xl font-black text-[#065758] mb-6">Account Settings</h2>
+        <div class="space-y-6">
+          <div>
+            <label class="form-label">Email Address</label>
+            {{ form.email(class="form-input w-full", placeholder="Enter your email address") }}
+            {% if form.email.errors %}
+              <div class="text-red-500 text-sm mt-1">
+                {% for error in form.email.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          <div>
+            <label class="form-label">Current Password</label>
+            {{ form.current_password(class="form-input w-full", placeholder="Enter current password") }}
+            {% if form.current_password.errors %}
+              <div class="text-red-500 text-sm mt-1">
+                {% for error in form.current_password.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          <div>
+            <label class="form-label">New Password</label>
+            {{ form.new_password(class="form-input w-full", placeholder="Enter new password") }}
+            {% if form.new_password.errors %}
+              <div class="text-red-500 text-sm mt-1">
+                {% for error in form.new_password.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          <div>
+            <label class="form-label">Confirm New Password</label>
+            {{ form.confirm_password(class="form-input w-full", placeholder="Confirm new password") }}
+            {% if form.confirm_password.errors %}
+              <div class="text-red-500 text-sm mt-1">
+                {% for error in form.confirm_password.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Privacy & Security -->
+      <div class="settings-card rounded-2xl p-6">
+        <h2 class="text-2xl font-black text-[#065758] mb-6">Privacy & Security</h2>
+        <div class="space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-[#065758] mb-1">Two-Factor Authentication</h3>
+              <p class="text-sm text-[#065758]/70">Add an extra layer of security</p>
+            </div>
+            <div class="toggle-switch {% if form.two_factor_auth.data == 'yes' %}active{% endif %} cursor-pointer" 
+                 onclick="toggleSetting(this, '{{ form.two_factor_auth.id }}')" 
+                 data-field="{{ form.two_factor_auth.id }}"></div>
+            {{ form.two_factor_auth(class="hidden") }}
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-[#065758] mb-1">Login Notifications</h3>
+              <p class="text-sm text-[#065758]/70">Get notified of new login attempts</p>
+            </div>
+            <div class="toggle-switch {% if form.login_notifications.data == 'yes' %}active{% endif %} cursor-pointer" 
+                 onclick="toggleSetting(this, '{{ form.login_notifications.id }}')" 
+                 data-field="{{ form.login_notifications.id }}"></div>
+            {{ form.login_notifications(class="hidden") }}
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-[#065758] mb-1">Data Export</h3>
+              <p class="text-sm text-[#065758]/70">Download your account data</p>
+            </div>
+            <button type="button" class="btn-primary px-4 py-2 rounded-lg text-white font-bold text-sm">Export Data</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Submit Button -->
+      <div class="flex justify-center">
+        {{ form.submit(class="btn-primary px-8 py-3 rounded-xl text-white font-bold text-lg") }}
+      </div>
+    </form>
+    
+    <!-- Danger Zone -->
+    <div class="settings-card rounded-2xl p-6 border-2 border-red-200 mt-8">
+      <h2 class="text-2xl font-black text-red-600 mb-6">Danger Zone</h2>
+      <div class="space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-bold text-[#065758] mb-1">Delete Account</h3>
+            <p class="text-sm text-[#065758]/70">Permanently delete your account and all data</p>
+          </div>
+          <button type="button" onclick="confirmDelete()" class="btn-secondary px-6 py-3 rounded-xl text-white font-bold">Delete Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Animated background shapes -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute left-10 top-20 w-80 h-80 bg-gradient-to-r from-[#00ffff] to-[#0a7a7b] rounded-full opacity-40 blur-3xl animate-float"></div>
+    <div class="absolute right-10 bottom-20 w-96 h-96 bg-gradient-to-l from-[#0c8a8b] to-[#00ffff] rounded-full opacity-35 blur-3xl animate-float" style="animation-delay: 1s;"></div>
+    <div class="absolute left-1/2 top-1/2 w-72 h-72 bg-gradient-to-br from-[#00ffff] to-[#0d9a9b] rounded-full opacity-30 blur-3xl animate-pulse-slow"></div>
+    <div class="absolute left-1/4 bottom-1/4 w-64 h-64 bg-gradient-to-tr from-[#0a7a7b] to-[#00ffff] rounded-full opacity-25 blur-3xl animate-float" style="animation-delay: 2s;"></div>
+  </div>
+
+  <script>
+    function toggleSetting(element, fieldId) {
+      element.classList.toggle('active');
+      const field = document.getElementById(fieldId);
+      if (fieldId.includes('profile_visibility')) {
+        field.value = element.classList.contains('active') ? 'public' : 'private';
+      } else {
+        field.value = element.classList.contains('active') ? 'yes' : 'no';
+      }
+    }
+    
+    function confirmDelete() {
+      if (confirm('Are you sure you want to permanently delete your account? This action cannot be undone.')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ url_for("delete_account") }}';
+        document.body.appendChild(form);
+        form.submit();
+      }
+    }
+  </script>
+</body>
+</html> 

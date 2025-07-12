@@ -7,6 +7,7 @@ from wtforms.validators import InputRequired, Email, Length
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
+import hashlib
 
 # ----------------------------
 # Flask App & Config
@@ -24,6 +25,21 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
 # ----------------------------
+# Custom Filters
+# ----------------------------
+@app.template_filter('hash')
+def hash_filter(text, algorithm='md5'):
+    """Custom filter to hash text using specified algorithm"""
+    if algorithm == 'md5':
+        return hashlib.md5(text.encode('utf-8')).hexdigest()
+    elif algorithm == 'sha1':
+        return hashlib.sha1(text.encode('utf-8')).hexdigest()
+    elif algorithm == 'sha256':
+        return hashlib.sha256(text.encode('utf-8')).hexdigest()
+    else:
+        return hashlib.md5(text.encode('utf-8')).hexdigest()  # default to md5
+
+# ----------------------------
 # Models
 # ----------------------------
 class User(db.Model, UserMixin):
@@ -35,6 +51,17 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.Text, nullable=True)
     location = db.Column(db.String(100), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Settings fields
+    profile_visibility = db.Column(db.String(20), default='public')
+    show_location = db.Column(db.Boolean, default=True)
+    show_email = db.Column(db.Boolean, default=False)
+    email_notifications = db.Column(db.Boolean, default=True)
+    push_notifications = db.Column(db.Boolean, default=False)
+    new_message_alerts = db.Column(db.Boolean, default=True)
+    swap_request_alerts = db.Column(db.Boolean, default=True)
+    two_factor_auth = db.Column(db.Boolean, default=False)
+    login_notifications = db.Column(db.Boolean, default=True)
     
     # Relationships
     skills_offering = db.relationship('Skill', backref='user', lazy=True, foreign_keys='Skill.user_id')
@@ -104,6 +131,56 @@ class SwapRequestForm(FlaskForm):
     skill_offered = StringField("Skill Offered", validators=[InputRequired(), Length(max=100)])
     submit = SubmitField("Create Request")
 
+class EditProfileForm(FlaskForm):
+    username = StringField("Username", validators=[InputRequired(), Length(min=3, max=150)])
+    email = StringField("Email", validators=[InputRequired(), Email()])
+    bio = TextAreaField("Bio", validators=[Length(max=500)])
+    location = StringField("Location", validators=[Length(max=100)])
+    submit = SubmitField("Update Profile")
+
+class SettingsForm(FlaskForm):
+    email = StringField("Email", validators=[InputRequired(), Email()])
+    current_password = PasswordField("Current Password")
+    new_password = PasswordField("New Password", validators=[Length(min=6)])
+    confirm_password = PasswordField("Confirm New Password")
+    profile_visibility = SelectField("Profile Visibility", choices=[
+        ('public', 'Public'),
+        ('private', 'Private')
+    ], validators=[InputRequired()])
+    show_location = SelectField("Show Location", choices=[
+        ('yes', 'Yes'),
+        ('no', 'No')
+    ], validators=[InputRequired()])
+    show_email = SelectField("Show Email", choices=[
+        ('yes', 'Yes'),
+        ('no', 'No')
+    ], validators=[InputRequired()])
+    email_notifications = SelectField("Email Notifications", choices=[
+        ('yes', 'Yes'),
+        ('no', 'No')
+    ], validators=[InputRequired()])
+    push_notifications = SelectField("Push Notifications", choices=[
+        ('yes', 'Yes'),
+        ('no', 'No')
+    ], validators=[InputRequired()])
+    new_message_alerts = SelectField("New Message Alerts", choices=[
+        ('yes', 'Yes'),
+        ('no', 'No')
+    ], validators=[InputRequired()])
+    swap_request_alerts = SelectField("Swap Request Alerts", choices=[
+        ('yes', 'Yes'),
+        ('no', 'No')
+    ], validators=[InputRequired()])
+    two_factor_auth = SelectField("Two-Factor Authentication", choices=[
+        ('yes', 'Yes'),
+        ('no', 'No')
+    ], validators=[InputRequired()])
+    login_notifications = SelectField("Login Notifications", choices=[
+        ('yes', 'Yes'),
+        ('no', 'No')
+    ], validators=[InputRequired()])
+    submit = SubmitField("Update Settings")
+
 # ----------------------------
 # Login Manager Loader
 # ----------------------------
@@ -167,21 +244,157 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
+    # User's skills
     user_skills = Skill.query.filter_by(user_id=current_user.id, is_active=True).all()
-    open_requests = SwapRequest.query.filter_by(status='open').order_by(SwapRequest.created_at.desc()).limit(5).all()
+    
+    # Pending requests (requests made by others that match user's skills)
+    pending_requests = SwapRequest.query.filter_by(status='open').order_by(SwapRequest.created_at.desc()).limit(10).all()
+    
+    # User's own requests
     user_requests = SwapRequest.query.filter_by(requester_id=current_user.id).order_by(SwapRequest.created_at.desc()).all()
+    
+    # Active swaps (accepted requests)
+    active_swaps = SwapRequest.query.filter(
+        ((SwapRequest.requester_id == current_user.id) | (SwapRequest.offerer_id == current_user.id)) &
+        (SwapRequest.status == 'accepted')
+    ).order_by(SwapRequest.created_at.desc()).all()
+    
+    # Completed swaps
+    completed_swaps = SwapRequest.query.filter(
+        ((SwapRequest.requester_id == current_user.id) | (SwapRequest.offerer_id == current_user.id)) &
+        (SwapRequest.status == 'completed')
+    ).order_by(SwapRequest.created_at.desc()).limit(5).all()
+    
+    # Calculate statistics
+    pending_count = len([r for r in pending_requests if r.requester_id != current_user.id])
+    active_count = len(active_swaps)
+    skills_count = len(user_skills)
+    
+    # Calculate average rating (placeholder - you can implement actual rating system)
+    avg_rating = 4.8  # This would come from a ratings table
     
     return render_template('dashboard.html', 
                          user=current_user, 
                          skills=user_skills, 
-                         open_requests=open_requests,
-                         user_requests=user_requests)
+                         pending_requests=pending_requests,
+                         user_requests=user_requests,
+                         active_swaps=active_swaps,
+                         completed_swaps=completed_swaps,
+                         pending_count=pending_count,
+                         active_count=active_count,
+                         skills_count=skills_count,
+                         avg_rating=avg_rating)
 
 @app.route('/profile')
 @login_required
 def profile():
     user_skills = Skill.query.filter_by(user_id=current_user.id, is_active=True).all()
     return render_template('profile.html', user=current_user, skills=user_skills)
+
+@app.route('/edit-profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    
+    if request.method == 'GET':
+        # Pre-populate form with current user data
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+        form.bio.data = current_user.bio
+        form.location.data = current_user.location
+    
+    if form.validate_on_submit():
+        # Check if email is already taken by another user
+        existing_user = User.query.filter_by(email=form.email.data).first()
+        if existing_user and existing_user.id != current_user.id:
+            flash("Email already registered by another user.", "error")
+            return redirect(url_for('edit_profile'))
+        
+        # Update user data
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        current_user.bio = form.bio.data
+        current_user.location = form.location.data
+        
+        db.session.commit()
+        flash("Profile updated successfully!", "success")
+        return redirect(url_for('profile'))
+    
+    return render_template('edit_profile.html', form=form, user=current_user)
+
+@app.route('/settings', methods=['GET', 'POST'])
+@login_required
+def settings():
+    form = SettingsForm()
+    
+    if request.method == 'GET':
+        # Pre-populate form with current user settings
+        form.email.data = current_user.email
+        form.profile_visibility.data = current_user.profile_visibility
+        form.show_location.data = 'yes' if current_user.show_location else 'no'
+        form.show_email.data = 'yes' if current_user.show_email else 'no'
+        form.email_notifications.data = 'yes' if current_user.email_notifications else 'no'
+        form.push_notifications.data = 'yes' if current_user.push_notifications else 'no'
+        form.new_message_alerts.data = 'yes' if current_user.new_message_alerts else 'no'
+        form.swap_request_alerts.data = 'yes' if current_user.swap_request_alerts else 'no'
+        form.two_factor_auth.data = 'yes' if current_user.two_factor_auth else 'no'
+        form.login_notifications.data = 'yes' if current_user.login_notifications else 'no'
+    
+    if form.validate_on_submit():
+        # Check if email is already taken by another user
+        existing_user = User.query.filter_by(email=form.email.data).first()
+        if existing_user and existing_user.id != current_user.id:
+            flash("Email already registered by another user.", "error")
+            return redirect(url_for('settings'))
+        
+        # Update user settings
+        current_user.email = form.email.data
+        current_user.profile_visibility = form.profile_visibility.data
+        current_user.show_location = form.show_location.data == 'yes'
+        current_user.show_email = form.show_email.data == 'yes'
+        current_user.email_notifications = form.email_notifications.data == 'yes'
+        current_user.push_notifications = form.push_notifications.data == 'yes'
+        current_user.new_message_alerts = form.new_message_alerts.data == 'yes'
+        current_user.swap_request_alerts = form.swap_request_alerts.data == 'yes'
+        current_user.two_factor_auth = form.two_factor_auth.data == 'yes'
+        current_user.login_notifications = form.login_notifications.data == 'yes'
+        
+        # Handle password change if provided
+        if form.current_password.data and form.new_password.data:
+            if not check_password_hash(current_user.password, form.current_password.data):
+                flash("Current password is incorrect.", "error")
+                return redirect(url_for('settings'))
+            
+            if form.new_password.data != form.confirm_password.data:
+                flash("New passwords do not match.", "error")
+                return redirect(url_for('settings'))
+            
+            current_user.password = generate_password_hash(form.new_password.data)
+            flash("Password updated successfully!", "success")
+        
+        db.session.commit()
+        flash("Settings updated successfully!", "success")
+        return redirect(url_for('settings'))
+    
+    return render_template('settings.html', form=form, user=current_user)
+
+@app.route('/delete-account', methods=['POST'])
+@login_required
+def delete_account():
+    # Delete user's skills
+    Skill.query.filter_by(user_id=current_user.id).delete()
+    
+    # Delete user's swap requests
+    SwapRequest.query.filter_by(requester_id=current_user.id).delete()
+    SwapRequest.query.filter_by(offerer_id=current_user.id).delete()
+    
+    # Delete user
+    db.session.delete(current_user)
+    db.session.commit()
+    
+    logout_user()
+    flash("Your account has been permanently deleted.", "info")
+    return redirect(url_for('index'))
 
 @app.route('/browse')
 def browse():

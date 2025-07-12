@@ -63,6 +63,7 @@
                 {% if current_user.is_authenticated %}
                     <a href="{{ url_for('dashboard') }}" class="hover:text-[#82C3C5] transition-all duration-300">Dashboard</a>
                     <a href="{{ url_for('profile') }}" class="hover:text-[#82C3C5] transition-all duration-300">Profile</a>
+                    <a href="{{ url_for('settings') }}" class="hover:text-[#82C3C5] transition-all duration-300">Settings</a>
                     <a href="{{ url_for('logout') }}" class="hover:text-[#82C3C5] transition-all duration-300">Logout</a>
                 {% else %}
                     <a href="{{ url_for('login') }}" class="hover:text-[#82C3C5] transition-all duration-300">Login</a>
@@ -89,6 +90,7 @@
                 {% if current_user.is_authenticated %}
                     <a href="{{ url_for('dashboard') }}" class="block hover:text-[#82C3C5] transition-all duration-300">Dashboard</a>
                     <a href="{{ url_for('profile') }}" class="block hover:text-[#82C3C5] transition-all duration-300">Profile</a>
+                    <a href="{{ url_for('settings') }}" class="block hover:text-[#82C3C5] transition-all duration-300">Settings</a>
                     <a href="{{ url_for('logout') }}" class="block hover:text-[#82C3C5] transition-all duration-300">Logout</a>
                 {% else %}
                     <a href="{{ url_for('login') }}" class="block hover:text-[#82C3C5] transition-all duration-300">Login</a>
