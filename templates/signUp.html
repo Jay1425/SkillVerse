@@ -20,6 +20,7 @@
       }
     }
   </script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="bg-bg min-h-screen flex items-center justify-center">
 
@@ -60,6 +61,30 @@
       <!-- Submit Button -->
       <button type="submit" class="w-full bg-primary text-white font-semibold py-2 rounded-md hover:bg-skyblue transition">Create Account</button>
     </form>
+
+    <div class="my-4 flex items-center justify-center">
+      <div class="border-t border-gray-300 w-1/4"></div>
+      <span class="mx-2 text-gray-500 text-sm">or</span>
+      <div class="border-t border-gray-300 w-1/4"></div>
+    </div>
+
+    <!-- Google Sign Up -->
+    <div id="g_id_onload"
+         data-client_id="YOUR_GOOGLE_CLIENT_ID"
+         data-context="signup"
+         data-ux_mode="popup"
+         data-login_uri="/google-signup"
+         data-auto_prompt="false">
+    </div>
+
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="pill"
+         data-theme="outline"
+         data-text="signup_with"
+         data-size="large"
+         data-logo_alignment="left">
+    </div>
 
     <p class="text-sm text-center text-gray-500 mt-4">Already a member? <a href="#" class="text-primary hover:underline">Log in</a></p>
   </div>
