@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 # --- Setup App ---
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key_here'
+app.config['SECRET_KEY'] = '874b9c3tnywniph97dot9bfcwn'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///skillverse.db'
 db = SQLAlchemy(app)
 
