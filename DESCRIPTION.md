@@ -490,18 +490,6 @@ SQLite was chosen because
 
 ---
 
-# ⚡ Challenges Faced
-
-- Designing database relationships
-- Secure authentication implementation
-- Session management
-- CRUD operations
-- User authorization
-- Responsive UI development
-- Managing swap request workflow
-
----
-
 # 📚 Learning Outcomes
 
 Through this project, we gained hands-on experience in:
