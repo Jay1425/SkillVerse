@@ -502,20 +502,6 @@ SQLite was chosen because
 
 ---
 
-# 🚀 Future Enhancements
-
-- 💬 Real-time Chat
-- 📅 Session Scheduling
-- ⭐ Ratings & Reviews
-- 🤖 AI-Based Skill Recommendation
-- 📍 Location-Based Matching
-- 🔔 Real-Time Notifications
-- 📹 Video Calling
-- ☁️ PostgreSQL / MongoDB Integration
-- 📱 Mobile Application
-
----
-
 # 📚 Learning Outcomes
 
 Through this project, we gained hands-on experience in:
