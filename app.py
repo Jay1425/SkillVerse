@@ -13,7 +13,9 @@ import hashlib
 # Flask App & Config
 # ----------------------------
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your_secret_key_here_change_in_production')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or os.urandom(32)
+if os.environ.get('FLASK_ENV') == 'production' and not os.environ.get('SECRET_KEY'):
+    raise RuntimeError('SECRET_KEY must be configured in production')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///skillverse.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
